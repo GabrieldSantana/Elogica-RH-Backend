@@ -9,10 +9,10 @@ namespace Infrastructure.Interfaces
 {
     public interface ICargosSetoresRepository
     {
-        Task<bool> AtualizarCargosSetores();
+        Task<bool> AtualizarCargosSetores(CargosSetores cargosSetores);
         Task<List<CargosSetores>> RetornarTodosCargosSetores();
-        Task<int> AdicionarCargosSetores();
-        Task<bool> DeletarCargosSetores();
+        Task<int> AdicionarCargosSetores(CargosSetores cargosSetores);
+        Task<bool> DeletarCargosSetores(int id );
 
 
         
