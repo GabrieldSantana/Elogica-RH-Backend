@@ -1,0 +1,6 @@
+@Elogica_RH_HostAddress = http://localhost:5276
+
+GET {{Elogica_RH_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
