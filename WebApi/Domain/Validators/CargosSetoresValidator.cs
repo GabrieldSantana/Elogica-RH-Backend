@@ -12,8 +12,14 @@ namespace Domain.Validators
     {
         public CargosSetoresValidator()
         {
-            RuleFor(x => x.CargosId).NotEmpty();
-            RuleFor(x => x.SetoresId).NotEmpty();
+            RuleFor(x => x.CargosId).NotEmpty().WithMessage("CargosId não pode ser vazio").
+                NotNull().WithMessage("CargosId não pode ser nulo").
+                GreaterThan(0).WithMessage("CargosId não pode ser nulo");
+
+            RuleFor(x => x.SetoresId).NotEmpty().WithMessage("SetoresId não pode ser vazio").
+                NotNull().WithMessage("SetoresId não pode ser nulo").
+                GreaterThan(0).WithMessage("SetoresId deve ser maior que zero");
+
             
 
         }
