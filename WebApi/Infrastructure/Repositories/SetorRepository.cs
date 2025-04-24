@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using Dapper;
-using Domain;
 using Domain.Models;
 using Infrastructure.Interfaces;
 
@@ -106,7 +105,7 @@ internal class SetorRepository : ISetorRepository
         }
     }
 
-    public async Task<IEnumerable<Setor>> BuscarTodosSetoresAsync()
+    public async Task<IEnumerable<Setor>> BuscarSetoresAsync()
     {
         try
         {
