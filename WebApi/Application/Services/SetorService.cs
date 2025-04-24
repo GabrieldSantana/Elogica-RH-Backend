@@ -36,10 +36,16 @@ namespace Application.Services
 
         public async Task<bool> AtualizarSetoresAsync(int id, SetorDto setorDto)
         {
+            var setorExistente = await _setorRepository.BuscarSetoresPorIdAsync(id);
+            if (setorExistente == null)
+                return false;
+
             var setor = _mapper.Map<Setor>(setorDto);
             setor.Id = id;
+
             return await _setorRepository.AtualizarSetoresAsync(setor);
         }
+
 
         public async Task<IEnumerable<Setor>> BuscarSetoresAsync()
         {
