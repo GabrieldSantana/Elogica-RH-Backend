@@ -23,7 +23,7 @@ internal class SetorRepository : ISetorRepository
         throw new NotImplementedException();
     }
 
-    public async Task<Setor> ObterSetoresPorIdAsync(int id)
+    public async Task<Setor> BuscarSetoresPorIdAsync(int id)
     {
         try
         {
@@ -35,13 +35,13 @@ internal class SetorRepository : ISetorRepository
             }
             return setor;
         }
-        catch(Exception)
+        catch (Exception)
         {
             throw;
         }
     }
 
-    public async Task<RetornoPaginado<Setor>> ObterSetoresPorPaginaAsync(int pagina, int quantidade)
+    public async Task<RetornoPaginado<Setor>> BuacarSetoresPorPaginaAsync(int pagina, int quantidade)
     {
         try
         {
@@ -67,19 +67,19 @@ internal class SetorRepository : ISetorRepository
 
             return retornoPaginado;
         }
-        catch(Exception)
+        catch (Exception)
         {
             throw;
         }
     }
 
-    public async Task<IEnumerable<Setor>> ObterTodosSetoresAsync()
+    public async Task<IEnumerable<Setor>> BuscarTodosSetoresAsync()
     {
         try
         {
-        string sql = "SELECT * FROM Setores";
-        var setores = await _connection.QueryAsync<Setor>(sql);
-        return setores;
+            string sql = "SELECT * FROM Setores";
+            var setores = await _connection.QueryAsync<Setor>(sql);
+            return setores;
         }
         catch (Exception)
         {
@@ -89,7 +89,8 @@ internal class SetorRepository : ISetorRepository
 
     public async Task<bool> RemoverSetoresAsync(int id)
     {
-        try {
+        try
+        {
             string sql = "DELETE FROM Setores WHERE Id = @Id";
             var parameters = new { Id = id };
             var result = await _connection.ExecuteAsync(sql, parameters);
