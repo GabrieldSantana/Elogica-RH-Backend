@@ -42,7 +42,12 @@ namespace Application.Services
 
         public async Task<Setor> BuscarSetorPorIdAsync(int id)
         {
-            return await _setorRepository.BuscarSetoresPorIdAsync(id);
+            var setor = await _setorRepository.BuscarSetoresPorIdAsync(id);
+
+            if (setor == null)
+                throw new Exception("Setor não encontrado.");
+
+            return setor;
         }
 
         public async Task<bool> ExcluirSetoresAsync(int id)

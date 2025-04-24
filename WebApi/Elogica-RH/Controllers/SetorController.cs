@@ -82,7 +82,6 @@ public class SetorController : MainController
         try
         {
         var setor = await _setorService.BuscarSetorPorIdAsync(id);
-        if (setor == null) return NotFound();
         return CustomResponse(setor);
         }
         catch (Exception ex)
