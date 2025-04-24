@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Dtos;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elogica_RH.Controllers;
@@ -30,12 +31,12 @@ public class SetorController : MainController
         }
     }
 
-    [HttpPut]
-    public async Task<IActionResult> AtualizarSetorAsync([FromBody] SetorDto setorDto)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> AtualizarSetorAsync(int id, [FromBody] SetorDto setorDto)
     {
         try
         {
-            var sucesso = await _setorService.AtualizarSetoresAsync(setorDto);
+            var sucesso = await _setorService.AtualizarSetoresAsync(id, setorDto);
             return CustomResponse(sucesso);
         }
         catch (Exception ex)
@@ -43,7 +44,6 @@ public class SetorController : MainController
             NotificarErro(ex.Message);
             return CustomResponse();
         }
-
     }
 
     [HttpGet]

@@ -17,9 +17,13 @@ builder.Services.AddScoped<IDbConnection>(provider =>
     return connection;
 });
 
+builder.Services.AddScoped<INotificador, Notificador>();
+
 builder.Services.AddScoped<ISetorService, SetorService>();
 
 builder.Services.AddScoped<ISetorRepository, SetorRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
