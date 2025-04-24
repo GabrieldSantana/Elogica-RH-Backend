@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
+using Domain.Dtos;
 using Domain.Models;
 using Infrastructure.Interfaces;
 
@@ -9,34 +10,36 @@ namespace Application.Services
     {
         private readonly ISetorRepository _setorRepository;
         private readonly IMapper _mapper;
-        public Task<bool> AdicionarSetoresAsync(Setor setor)
+        public async Task<bool> AdicionarSetoresAsync(SetorDto setorDto)
         {
-            throw new NotImplementedException();
+            var setor = _mapper.Map<Setor>(setorDto);
+            return await _setorRepository.AdicionarSetoresAsync(setor);
         }
 
-        public Task<bool> AtualizarSetoresAsync(Setor setor)
+        public async Task<bool> AtualizarSetoresAsync(SetorDto setorDto)
         {
-            throw new NotImplementedException();
+            var setor = _mapper.Map<Setor>(setorDto);
+            return await _setorRepository.AtualizarSetoresAsync(setor);
         }
 
-        public Task<IEnumerable<Setor>> BuscarSetoresAsync()
+        public async Task<IEnumerable<Setor>> BuscarSetoresAsync()
         {
-            throw new NotImplementedException();
+            return await _setorRepository.BuscarSetoresAsync();
         }
 
-        public Task<RetornoPaginado<Setor>> BuscarSetoresPaginadoAsync()
+        public async Task<RetornoPaginado<Setor>> BuscarSetoresPaginadoAsync(int pagina, int quantidade)
         {
-            throw new NotImplementedException();
+            return await _setorRepository.BuscarSetoresPaginadoAsync(pagina, quantidade);
         }
 
-        public Task<Setor> BuscarSetorPorIdAsync(int id)
+        public async Task<Setor> BuscarSetorPorIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _setorRepository.BuscarSetoresPorIdAsync(id);
         }
 
-        public Task<bool> DeletarSetoresAsync(int id)
+        public async Task<bool> ExcluirSetoresAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _setorRepository.ExcluirSetoresAsync(id);
         }
     }
 }
