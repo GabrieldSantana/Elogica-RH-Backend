@@ -1,3 +1,8 @@
+using Application.Interfaces;
+using Application.Services;
+using Domain.Notificacao;
+using Elogica_RH.Config;
+using Infrastructure.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -21,16 +26,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-#region SERVICES
-builder.Services.AddScoped <ICargosSetoresService, CargosSetoresService>();
-builder.Services.AddScoped<INotificador, Notificacao>();
-
-#endregion
-
-#region REPOSITORY
-builder.Services.AddScoped<ICargosSetoresRepository, CargosSetoresRepository>();
-#endregion
 
 
 builder.Services.AddCors(options =>
