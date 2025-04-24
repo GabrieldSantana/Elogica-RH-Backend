@@ -1,4 +1,4 @@
-﻿namespace Domain;
+﻿namespace Domain.Models;
 
 public class RetornoPaginado<T> where T : class
 {
