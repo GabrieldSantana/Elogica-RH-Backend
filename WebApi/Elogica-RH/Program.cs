@@ -1,7 +1,4 @@
-using Application.Interfaces;
-using Application.Services;
-using Infrastructure.Repositories;
-using Infrastructure.Interfaces;
+using Elogica_RH.Config;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -17,11 +14,7 @@ builder.Services.AddScoped<IDbConnection>(provider =>
     return connection;
 });
 
-builder.Services.AddScoped<INotificador, Notificador>();
-
-builder.Services.AddScoped<ISetorService, SetorService>();
-
-builder.Services.AddScoped<ISetorRepository, SetorRepository>();
+builder.Services.DependencInjection(builder.Configuration);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
