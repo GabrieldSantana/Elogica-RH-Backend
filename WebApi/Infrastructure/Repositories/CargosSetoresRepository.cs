@@ -65,8 +65,27 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         }
     }
 
-    public Task<bool> ExcluirCargosSetoresAsync(int id)
+    public async Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var sqlDelete = @"delete from CargosSetores where CargosId = @cargosId and SetoresId = @setoresID";
+
+
+            var parametros = new
+            {
+                CARGOSID = cargosSetores.CargosId,
+                SETORESID = cargosSetores.SetoresId
+            };
+
+            var retorno = await _conn.ExecuteAsync(sqlDelete, parametros);
+
+            return retorno > 0;
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
 }
