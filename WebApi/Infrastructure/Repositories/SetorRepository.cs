@@ -41,7 +41,7 @@ internal class SetorRepository : ISetorRepository
         }
     }
 
-    public async Task<RetornoPaginado<Setor>> BuacarSetoresPorPaginaAsync(int pagina, int quantidade)
+    public async Task<RetornoPaginado<Setor>> BuscarSetoresPaginadoAsync(int pagina, int quantidade)
     {
         try
         {
@@ -87,7 +87,7 @@ internal class SetorRepository : ISetorRepository
         }
     }
 
-    public async Task<bool> RemoverSetoresAsync(int id)
+    public async Task<bool> ExcluirSetoresAsync(int id)
     {
         try
         {
