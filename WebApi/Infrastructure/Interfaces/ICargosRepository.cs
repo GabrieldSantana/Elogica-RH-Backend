@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Interfaces
 {
-    interface ICargosRepository
+    public interface ICargosRepository
     {
         Task<RetornoPaginado<Cargos>> BuscarCargosPaginadoAsync(int pagina, int quantidade);
         Task<IEnumerable<Cargos>> BuscarCargosAsync();

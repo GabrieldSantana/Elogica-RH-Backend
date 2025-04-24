@@ -5,7 +5,7 @@ using Infrastructure.Interfaces;
 
 namespace Infrastructure.Repositories
 {
-    class CargosRepository : ICargosRepository
+    public class CargosRepository : ICargosRepository
     {
         private readonly IDbConnection _conn;
 
