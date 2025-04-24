@@ -1,3 +1,7 @@
+using Application.Interfaces;
+using Application.Services;
+using Infrastructure.Interfaces;
+using Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -17,6 +21,15 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+#region SERVICES
+builder.Services.AddScoped <ICargosSetoresService, CargosSetoresService>();
+#endregion
+
+#region REPOSITORY
+builder.Services.AddScoped<ICargosSetoresRepository, CargosSetoresRepository>();
+#endregion
+
 
 builder.Services.AddCors(options =>
 {

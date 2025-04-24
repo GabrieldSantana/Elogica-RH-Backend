@@ -91,7 +91,7 @@ public class CargosSetoresController : MainController
             return CustomResponse();
         }
     }
-
+    [HttpPut]
     public async Task<IActionResult> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
     {
         try
