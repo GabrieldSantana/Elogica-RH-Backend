@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Services;
+using Domain.Notificacao;
 using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
@@ -24,6 +25,7 @@ builder.Services.AddSwaggerGen();
 
 #region SERVICES
 builder.Services.AddScoped <ICargosSetoresService, CargosSetoresService>();
+builder.Services.AddScoped<INotificador, Notificacao>();
 
 #endregion
 

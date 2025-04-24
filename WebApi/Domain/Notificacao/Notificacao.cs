@@ -1,5 +1,7 @@
-﻿namespace Domain.Notificacao;
-public class Notificacao
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace Domain.Notificacao;
+public class Notificacao :  Application.Interface.INotificador
 {
     public string Mensagem { get; }
 
