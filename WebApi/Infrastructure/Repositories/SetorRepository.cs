@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Dapper;
+using Domain;
 using Domain.Models;
 using Infrastructure.Interfaces;
 
@@ -53,15 +54,17 @@ internal class SetorRepository : ISetorRepository
             };
 
             var setores = await _connection.QueryAsync<Setor>(sql, parametros);
+
             var totalSetores = "SELECT COUNT(*) FROM Setores";
+
             var retornoTotalSetores = await _connection.ExecuteScalarAsync<int>(totalSetores);
+
             var retornoPaginado = new RetornoPaginado<Setor>
             {
-                TotalRegistros = retornoTotalSetores,
-                Pagina = pagina,
-                QtdPagina = quantidade,
-                Retorno = setores.ToList()
+                TotalRegistro = retornoTotalSetores,
+                Registros = setores.ToList()
             };
+
             return retornoPaginado;
         }
         catch(Exception)
