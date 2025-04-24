@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
-using Domain.Main;
+using Domain.Notificacao;
 
 [ApiController]
 public abstract class MainController : ControllerBase

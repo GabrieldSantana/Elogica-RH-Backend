@@ -1,3 +1,7 @@
+using Application.Interfaces;
+using Application.Services;
+using Infrastructure.Repositories;
+using Infrastructure.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -12,6 +16,10 @@ builder.Services.AddScoped<IDbConnection>(provider =>
     connection.Open();
     return connection;
 });
+
+builder.Services.AddScoped<ISetorService, SetorService>();
+
+builder.Services.AddScoped<ISetorRepository, SetorRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

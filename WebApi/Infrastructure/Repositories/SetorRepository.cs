@@ -5,7 +5,7 @@ using Infrastructure.Interfaces;
 
 namespace Infrastructure.Repositories;
 
-internal class SetorRepository : ISetorRepository
+public class SetorRepository : ISetorRepository
 {
     private readonly IDbConnection _connection;
     public SetorRepository(IDbConnection connection)
