@@ -41,26 +41,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
 
     public Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
     {
-        try
-        {
-            var sqlUpdate = @"update CargosSetores set CargosId = @cargosid2,
-            SetoresId = @Setoresid 
-            where CargosId = @cargoID 
-            and SetoresId = @SetoresId";
-
-            var parametros = new { 
-            
-
-            };
-
-
-
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
+        throw new NotImplementedException();
     }
 
     public async Task<List<CargosSetores>> BuscarCargosSetoresAsync()
