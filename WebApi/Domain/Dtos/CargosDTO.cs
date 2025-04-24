@@ -2,7 +2,7 @@
 
 namespace Domain.Dtos
 {
-    class CargosDTO
+    public class CargosDto
     {
         [Required(ErrorMessage = "O Titulo é obrigatório.")]
         [MaxLength(50, ErrorMessage = "Máximo de 50 caracteres para Titulo.")]
