@@ -12,7 +12,9 @@ namespace Infrastructure.Interfaces
         Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetores);
         Task<List<CargosSetores>> BuscarCargosSetoresAsync();
         Task<int> AdicionarCargosSetoresAsync(CargosSetores cargosSetores);
-        Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores );
+
+
+
 
 
         

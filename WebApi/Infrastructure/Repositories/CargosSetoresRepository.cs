@@ -51,6 +51,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
             var sqlSelect = @"SELECT * FROM CARGOSSETORES";
 
             var resultado = await _conn.QueryAsync<CargosSetores>(sqlSelect);
+
             return resultado.ToList();
         }
         catch (Exception)
@@ -60,27 +61,5 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         }
     }
 
-    public async Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores)
-    {
-        try
-        {
-            var sqlDelete = @"delete from CargosSetores where CargosId = @cargosId and SetoresId = @setoresID";
-
-
-            var parametros = new
-            {
-                CARGOSID = cargosSetores.CargosId,
-                SETORESID = cargosSetores.SetoresId
-            };
-
-            var retorno = await _conn.ExecuteAsync(sqlDelete, parametros);
-
-            return retorno > 0;
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
+  
 }
