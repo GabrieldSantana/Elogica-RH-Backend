@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain.Main;
 
 namespace Application.Services;
 internal class Notificador : INotificador
