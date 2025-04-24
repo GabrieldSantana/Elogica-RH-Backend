@@ -85,9 +85,24 @@ namespace Application.Services
             }
         }
 
-        public Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores)
+        public async Task<bool> ExcluirCargosSetoresAsync(int cargosId)
         {
-            throw new NotImplementedException();
+            try
+            {
+               if(cargosId <= 0)
+                {
+                    throw new ArgumentException("O CargosId deve ser maior que zero", nameof(cargosId));
+                }
+
+                var excluirCargosSetores = await _cargosSetoresRepository.ExcluirCargosSetoresAsync(cargosId);
+
+                return excluirCargosSetores;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
