@@ -8,8 +8,8 @@ public interface ISetorRepository
     Task<IEnumerable<Setor>> BuscarTodosSetoresAsync();
     Task<RetornoPaginado<Setor>> BuscarSetoresPaginadoAsync(int pagina, int quantidade);
     Task<Setor> BuscarSetoresPorIdAsync(int id);
-    Task<Setor> AdicionarSetoresAsync(Setor setor);
-    Task<Setor> AtualizarSetoresAsync(Setor setor);
+    Task<bool> AdicionarSetoresAsync(Setor setor);
+    Task<bool> AtualizarSetoresAsync(Setor setor);
     Task<bool> ExcluirSetoresAsync(int id);
   
 }

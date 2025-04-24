@@ -13,14 +13,47 @@ internal class SetorRepository : ISetorRepository
     {
         _connection = connection;
     }
-    public async Task<Setor> AdicionarSetoresAsync(Setor setor)
+
+    public async Task<bool> AdicionarSetoresAsync(Setor setor)
     {
-        throw new NotImplementedException();
+        try
+        {
+            string sql = "INSERT INTO SETORES (Nome, Descricao) VALUES (@Nome, @Descricao)";
+
+            var parametros = new
+            {
+                setor.Nome,
+                setor.Descricao
+            };
+
+            var setoresCadastrados = await _connection.ExecuteAsync(sql, parametros);
+            return setoresCadastrados > 0 ? true : false;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
-    public async Task<Setor> AtualizarSetoresAsync(Setor setor)
+    public async Task<bool> AtualizarSetoresAsync(Setor setor)
     {
-        throw new NotImplementedException();
+        try
+        {
+            string sql = @"UPDATE SETORES SET Nome = @Nome, Descricao = @Descricao WHERE Id = @Id";
+            var parametros = new
+            {
+                Nome = setor.Nome,
+                Descricao = setor.Descricao,
+                Id = setor.Id,
+            };
+
+            var resultado = await _connection.ExecuteAsync(sql, parametros);
+            return resultado > 0 ? true : false;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<Setor> BuscarSetoresPorIdAsync(int id)
