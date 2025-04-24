@@ -19,6 +19,16 @@ namespace Application.Services
 
         public async Task<bool> AdicionarSetoresAsync(SetorDto setorDto)
         {
+            var setoresExistentes = await _setorRepository.BuscarSetoresAsync();
+
+            var nomeJaExiste = setoresExistentes
+                .Any(s => string.Equals(s.Nome, setorDto.Nome, StringComparison.OrdinalIgnoreCase));
+
+            if (nomeJaExiste)
+            {
+                throw new Exception($"Já existe um setor com o nome '{setorDto.Nome}'.");
+            }
+
             var setor = _mapper.Map<Setor>(setorDto);
             return await _setorRepository.AdicionarSetoresAsync(setor);
         }
@@ -26,7 +36,7 @@ namespace Application.Services
         public async Task<bool> AtualizarSetoresAsync(int id, SetorDto setorDto)
         {
             var setor = _mapper.Map<Setor>(setorDto);
-            setor.Id = id; 
+            setor.Id = id;
             return await _setorRepository.AtualizarSetoresAsync(setor);
         }
 
@@ -52,7 +62,14 @@ namespace Application.Services
 
         public async Task<bool> ExcluirSetoresAsync(int id)
         {
-            return await _setorRepository.ExcluirSetoresAsync(id);
+            var sucesso = await _setorRepository.ExcluirSetoresAsync(id);
+
+            if (!sucesso)
+            {
+                throw new InvalidOperationException($"Não foi possível excluir o setor com ID {id}. Verifique se ele existe.");
+            }
+
+            return true;
         }
     }
 }
