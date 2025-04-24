@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.DTOs;
+namespace Domain.Dtos;
 
 public class FeriasDto
 {
