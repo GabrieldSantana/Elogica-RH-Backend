@@ -82,7 +82,7 @@ namespace Application.Services
                 throw;
             }
         }
-        public async Task<bool> AtualizarCargosAsync(CargosDto cargosDto)
+        public async Task<bool> AtualizarCargosAsync(AtualizarCargosDto cargosDto)
         {
             try
             {
