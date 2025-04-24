@@ -4,47 +4,69 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 using Domain.Models;
 using Infrastructure.Interfaces;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Repositories;
+
+public class CargosSetoresRepository : ICargosSetoresRepository
 {
-    public class CargosSetoresRepository : ICargosSetoresRepository
+
+    private readonly IDbConnection _conn;
+
+    public CargosSetoresRepository(IDbConnection conn)
     {
+        _conn = conn;
+    }
 
-        private readonly IDbConnection _conn;
-
-        public CargosSetoresRepository(IDbConnection conn)
+    public async Task<int> AdicionarCargosSetoresAsync(CargosSetores cargosSetores)
+    {
+        try
         {
-            _conn = conn;
-        }
+            var sqlInsert = @"insert into CargosSetores(CargosId, SetoresId) values(@cargoId, @SETORESID);";
 
-        public Task<int> AdicionarCargosSetores()
-        {
-            try
+            var paramentros = new
             {
+                CARGOSID = cargosSetores.CargosId,
+                SETORESID = cargosSetores.SetoresId
+            };
 
-            }
-            catch (Exception)
-            {
+            var resultado = await _conn.ExecuteAsync(sqlInsert, paramentros);
 
-                throw;
-            }
+            return resultado;
+
         }
-
-        public Task<bool> AtualizarCargosSetores()
+        catch (Exception)
         {
-            throw new NotImplementedException();
-        }
 
-        public Task<bool> DeletarCargosSetores()
-        {
-            throw new NotImplementedException();
+            throw;
         }
+    }
 
-        public Task<List<CargosSetores>> RetornarTodosCargosSetores()
+    public Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<List<CargosSetores>> BuscarCargosSetoresAsync()
+    {
+        try
         {
-            throw new NotImplementedException();
+            var sqlSelect = @"SELECT * FROM CARGOSSETORES";
+
+            var resultado = await _conn.QueryAsync<CargosSetores>(sqlSelect);
+            return resultado.ToList();
         }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+    public Task<bool> ExcluirCargosSetoresAsync(int id)
+    {
+        throw new NotImplementedException();
     }
 }
