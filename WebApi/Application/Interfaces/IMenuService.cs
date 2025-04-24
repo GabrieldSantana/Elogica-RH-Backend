@@ -9,6 +9,6 @@ public interface IMenuService
     Task<RespostaMenuDto> BuscaMenuPorIdAsync(int id);
     Task<bool> AdicionarMenuAsync(CriaMenuDto menu);
     Task<bool> AtualizarMenuAsync(AtualizaMenuDto menu);
-    Task<RetornoPaginado<Menu>> BuscarMenuPaginadoAsync();
+    Task<RetornoPaginado<RespostaMenuDto>> BuscarMenuPaginadoAsync(int pagina, int quantidade);
     Task<bool> ExcluirMenuAsync(int idg);
 }

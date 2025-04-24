@@ -28,6 +28,43 @@ public class MenuRepository: IMenuRepository
         }
     }
 
+    public async Task<int> TotalMenuAsync()
+    {
+        try
+        {
+            string sql = "SELECT COUNT(*) FROM MENU";
+            int totalMenu = await _connection.ExecuteAsync(sql);
+            return totalMenu;
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
+
+    public async Task<List<Menu>> BuscarMenuPorPaginaEQuantidadeAsync(int pagina, int quantidade)
+    {
+        try
+        {
+            string sql = "SELECT * FROM Menu ORDER BY ID OFFSET @OFFSET ROWS FETCH NEXT @QUANTIDADE ROWS ONLY";
+
+            var parameters = new
+            {
+                OFFSET = (pagina - 1) * quantidade,
+                QUANTIDADE = quantidade
+            };
+
+            var result =  await _connection.QueryAsync<Menu>(sql, parameters);
+
+            return result.ToList();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
     public async Task<Menu> BuscaMenuPorIdAsync(int id)
     {
         try
@@ -90,11 +127,6 @@ public class MenuRepository: IMenuRepository
         {
             throw new Exception(e.Message);
         }
-    }
-
-    public Task<RetornoPaginado<Menu>> BuscarMenuPaginadoAsync()
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<bool> ExcluirMenuAsync(int id)

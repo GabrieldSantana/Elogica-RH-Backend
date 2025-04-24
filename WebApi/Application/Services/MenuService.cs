@@ -66,9 +66,24 @@ public class MenuService : IMenuService
         return result;
     }
 
-    public Task<RetornoPaginado<Menu>> BuscarMenuPaginadoAsync()
+    public async Task<RetornoPaginado<RespostaMenuDto>> BuscarMenuPaginadoAsync(int pagina, int quantidade)
     {
-        throw new NotImplementedException();
+        try
+        {
+            List<Menu> menu = await _repository.BuscarMenuPorPaginaEQuantidadeAsync(pagina, quantidade);
+            var listaRespostaMenu = _mapper.Map<List<RespostaMenuDto>>(menu);
+            int quantidadeMenu = await _repository.TotalMenuAsync();
+
+            return new RetornoPaginado<RespostaMenuDto>()
+            {
+                Registros = listaRespostaMenu,
+                TotalRegistro = quantidadeMenu
+            };
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
     }
 
     public async Task<bool> ExcluirMenuAsync(int id)
