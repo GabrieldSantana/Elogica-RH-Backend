@@ -24,6 +24,7 @@ builder.Services.AddSwaggerGen();
 
 #region SERVICES
 builder.Services.AddScoped <ICargosSetoresService, CargosSetoresService>();
+
 #endregion
 
 #region REPOSITORY
