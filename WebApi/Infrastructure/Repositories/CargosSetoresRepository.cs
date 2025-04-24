@@ -39,6 +39,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         }
     }
 
+    //Voltar mais tarde 
     public Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
     {
         throw new NotImplementedException();
@@ -59,6 +60,36 @@ public class CargosSetoresRepository : ICargosSetoresRepository
             throw;
         }
     }
+
+    public async Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int quantidade, int pagina)
+    {
+        try
+        {
+            string sql = "SELECT * FROM CARGOSSETORES ORDER BY CARGOSID OFFSET @OFFSET ROWS FETCH NEXT @QUANTIDADE ROWS ONLY";
+
+            var parametros = new
+            {
+                OFFSET = (pagina - 1) * quantidade,
+                QUANTIDADE = quantidade
+            };
+
+            var cargosSetores = await _conn.QueryAsync<CargosSetores>(sql, parametros);
+            var totalCargosSetores = "SELECT COUNT(*) FROM CARGOSSETORES";
+
+            var retornoTotalCargosSetores = await _conn.ExecuteScalarAsync<int>(totalCargosSetores);
+
+            var retornoPaginado = new RetornoPaginado<CargosSetores>
+            {
+               TotalRegistro = retornoTotalCargosSetores,
+               Registros = cargosSetores.ToList()
+            };
+
+            return retornoPaginado;
+        
+         }
+            catch (Exception ex) { throw; }
+        }
+    
 
     public async Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores)
     {
