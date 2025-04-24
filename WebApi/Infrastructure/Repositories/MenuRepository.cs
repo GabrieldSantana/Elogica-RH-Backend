@@ -14,7 +14,7 @@ public class MenuRepository: IMenuRepository
         _connection = connection;
     }
 
-    public async Task<List<Menu>> ListarMenuAsync()
+    public async Task<List<Menu>> BuscarMenuAsync()
     {
         try
         {
@@ -43,7 +43,7 @@ public class MenuRepository: IMenuRepository
         }
     }
 
-    public async Task<bool> CriarMenuAsync(Menu menu)
+    public async Task<bool> AdicionarMenuAsync(Menu menu)
     {
         try
         {
@@ -90,6 +90,11 @@ public class MenuRepository: IMenuRepository
         {
             throw new Exception(e.Message);
         }
+    }
+
+    public Task<RetornoPaginado<Menu>> BuscarMenuPaginadoAsync()
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<bool> ExcluirMenuAsync(int id)

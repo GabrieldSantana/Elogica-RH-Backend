@@ -1,4 +1,4 @@
-﻿using Domain.Main;
+﻿using Domain.Notificacao;
 
 namespace Application.Interfaces;
 public interface INotificador
