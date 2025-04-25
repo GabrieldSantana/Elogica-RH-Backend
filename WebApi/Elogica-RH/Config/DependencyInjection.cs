@@ -15,6 +15,8 @@ public static class DependencyInjection
         services.AddScoped<IMenuRepository, MenuRepository>();
         services.AddScoped<IMenuService, MenuService>();
         services.AddScoped<INotificador, Notificador>();
+        services.AddScoped<IHorariosRepository, HorariosRepository>();
+        services.AddScoped<IHorariosService, HorariosService>();
 
 
 
