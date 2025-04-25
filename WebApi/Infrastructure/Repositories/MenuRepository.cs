@@ -150,4 +150,19 @@ public class MenuRepository : IMenuRepository
             throw new Exception(e.Message);
         }
     }
+
+    public Task<List<Menu>> ListarMenuAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> CriarMenuAsync(Menu menu)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> AtualizarMenuAsync(Menu menu)
+    {
+        throw new NotImplementedException();
+    }
 }

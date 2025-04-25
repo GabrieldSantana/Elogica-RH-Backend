@@ -50,7 +50,7 @@ public class CargosSetoresController : MainController
             
             var resultado = await _service.AdicionarCargosSetoresAsync(cargosSetores);
             
-                return CustomResponse(resultado);
+                return CustomResponse("CargosSetores Criado com sucesso!!");
             
 
         }
