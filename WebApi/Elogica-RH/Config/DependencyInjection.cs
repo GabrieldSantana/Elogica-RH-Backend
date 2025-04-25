@@ -12,19 +12,25 @@ public static class DependencyInjection
     public static IServiceCollection DependencInjection(this IServiceCollection services, IConfiguration configuration)
     {
 
-        
+        #region Menu
         services.AddScoped<IMenuRepository, MenuRepository>();
         services.AddScoped<IMenuService, MenuService>();
-        services.AddScoped<INotificador, Notificador>();
+        #endregion
 
+        #region Funcionário
         services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
         services.AddScoped<IFuncionarioService, FuncionarioService>();
-        
-        services.AddScoped<INotificador, Notificador>();
-        
+        #endregion
 
+        #region Horarios
         services.AddScoped<IHorariosRepository, HorariosRepository>();
         services.AddScoped<IHorariosService, HorariosService>();
+        #endregion
+
+        #region Ferias
+        services.AddScoped<IFeriasRepository, FeriasRepository>();
+        services.AddScoped<IFeriasService, FeriasService>();
+        #endregion
 
         #region Cargos
         #region Service
@@ -35,13 +41,19 @@ public static class DependencyInjection
         #endregion
         #endregion
 
+        #region Setor
         #region Services
         services.AddScoped<ISetorService, SetorService>();
         #endregion
-
         #region Repositories
         services.AddScoped<ISetorRepository, SetorRepository>();
         #endregion
+        #endregion
+
+        #region Notificador
+        services.AddScoped<INotificador, Notificador>();
+        #endregion
+
 
         return services;
     }
