@@ -1,0 +1,185 @@
+﻿using Application.Interfaces;
+using Domain.Dtos;
+using Domain.Models;
+using Infrastructure.Interfaces;
+
+namespace Application.Services
+{
+    public class HorariosService : IHorariosService
+    {
+        private readonly IHorariosRepository _repository;
+
+        public HorariosService(IHorariosRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<string> AtualizarHorarioAsync(int id, HorariosDto horario)
+        {
+            string retorno = "";
+            try
+            {
+                var horarioExistente = await _repository.BuscarHorarioPorIdAsync(id);
+                if (horario == null)
+                    throw new ArgumentException("Os dados do horário não podem ser nulos.");
+
+                if (horario.HorarioInicio.Hour < 8 || horario.HorarioFim.Hour > 20)
+                    throw new ArgumentException("Os horários devem estar entre 08:00 e 20:00.");
+
+                if (horario.HorarioInicio.Hour > 10)
+                    throw new ArgumentException("O horário de início não pode ser após as 10:00.");
+
+                if (horario.IntervaloInicio.Hour < 12 || horario.IntervaloFim.Hour > 14)
+                    throw new ArgumentException("O intervalo só pode acontecer entre 12:00 e 14:00.");
+
+                var duracaoIntervalo = horario.IntervaloFim - horario.IntervaloInicio;
+                if (duracaoIntervalo.TotalHours != 1 && duracaoIntervalo.TotalHours != 2)
+                    throw new ArgumentException("O intervalo só pode ter duração de 1h ou 2h.");
+
+                var todosHorarios = new[] {
+                horario.HorarioInicio, horario.HorarioFim,
+                horario.IntervaloInicio, horario.IntervaloFim
+                };
+
+                if (todosHorarios.Any(h => h.Minute != 0 || h.Second != 0))
+                    throw new ArgumentException("Todos os horários precisam começar e finalizar em horas fechadas (exemplo: 08:00).");
+
+                if (horario.HorarioInicio >= horario.HorarioFim)
+                    throw new ArgumentException("O horário de início precisa ser anterior ao horário de fim.");
+
+                if (horario.IntervaloInicio >= horario.IntervaloFim)
+                    throw new ArgumentException("O início do intervalo precisa ser anterior ao fim.");
+
+                bool sucesso = await _repository.AdicionarHorarioAsync(horario);
+
+                if (sucesso)
+                {
+                    retorno = "Horário atualizado com sucesso!";
+                }
+
+                return retorno;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<RetornoPaginado<Horarios>> BuscarHorarioPaginadoAsync(int pagina, int quantidade)
+        {
+            try
+            {
+                if (pagina < 1 || quantidade < 1)
+                    throw new ArgumentException("Os parâmetros de paginação devem ser maiores que zero.");
+
+                return await _repository.BuscarHorarioPaginadoAsync(pagina, quantidade);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Horarios> BuscarHorarioPorIdAsync(int id)
+        {
+            try
+            {
+                var horario = await _repository.BuscarHorarioPorIdAsync(id);
+                if (horario == null)
+                    throw new ArgumentException("Horário não encontrado.");
+
+                return horario;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<Horarios>> BuscarTodosHorariosAsync()
+        {
+            try
+            {
+                return await _repository.BuscarTodosHorariosAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> AdicionarHorarioAsync(HorariosDto horario)
+        {
+            string retorno = "";
+            try
+            {
+                if (horario == null)
+                    throw new ArgumentException("Os dados do horário não podem ser nulos.");
+
+                if (horario.HorarioInicio.Hour < 8 || horario.HorarioFim.Hour > 20)
+                    throw new ArgumentException("Os horários devem estar entre 08:00 e 20:00.");
+
+                if (horario.HorarioInicio.Hour > 10)
+                    throw new ArgumentException("O horário de início não pode ser após as 10:00.");
+
+                if (horario.IntervaloInicio.Hour < 12 || horario.IntervaloFim.Hour > 14)
+                    throw new ArgumentException("O intervalo só pode acontecer entre 12:00 e 14:00.");
+
+                var duracaoIntervalo = horario.IntervaloFim - horario.IntervaloInicio;
+                if (duracaoIntervalo.TotalHours != 1 && duracaoIntervalo.TotalHours != 2)
+                    throw new ArgumentException("O intervalo só pode ter duração de 1h ou 2h.");
+
+                var todosHorarios = new[] {
+                horario.HorarioInicio, horario.HorarioFim,
+                horario.IntervaloInicio, horario.IntervaloFim
+                };
+
+                if (todosHorarios.Any(h => h.Minute != 0 || h.Second != 0))
+                    throw new ArgumentException("Todos os horários precisam começar e finalizar em horas fechadas (exemplo: 08:00).");
+
+                if (horario.HorarioInicio >= horario.HorarioFim)
+                    throw new ArgumentException("O horário de início precisa ser anterior ao horário de fim.");
+
+                if (horario.IntervaloInicio >= horario.IntervaloFim)
+                    throw new ArgumentException("O início do intervalo precisa ser anterior ao fim.");
+
+                bool sucesso = await _repository.AdicionarHorarioAsync(horario);
+
+                if (sucesso)
+                {
+                    retorno = "Horário adicionado com sucesso!";
+                }
+
+                return retorno;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> ExcluirHorarioAsync(int id)
+        {
+            string retorno = "";
+            try
+            {
+                var horario = await _repository.BuscarHorarioPorIdAsync(id);
+                if (horario == null)
+                    throw new ArgumentException("Horário não encontrado.");
+
+                bool sucesso = await _repository.ExcluirHorarioAsync(id);
+
+                if (sucesso)
+                {
+                    retorno = "Horário excluído com sucesso!";
+                }
+
+                return retorno;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+    }
+}
