@@ -5,7 +5,7 @@ namespace Infrastructure.Interfaces
 {
     public interface IHorariosRepository
     {
-        Task<List<Horarios>> BuscarTodosHorariosAsync();
+        Task<List<Horarios>> BuscarHorariosAsync();
         Task<Horarios> BuscarHorarioPorIdAsync(int id);
         Task<RetornoPaginado<Horarios>> BuscarHorarioPaginadoAsync(int pagina, int quantidade);
         Task<bool> AdicionarHorarioAsync(HorariosDto horario);

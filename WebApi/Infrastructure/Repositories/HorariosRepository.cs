@@ -91,7 +91,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<List<Horarios>> BuscarTodosHorariosAsync()
+        public async Task<List<Horarios>> BuscarHorariosAsync()
         {
             try
             {

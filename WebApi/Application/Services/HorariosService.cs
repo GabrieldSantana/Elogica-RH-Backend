@@ -96,11 +96,11 @@ namespace Application.Services
             }
         }
 
-        public async Task<List<Horarios>> BuscarTodosHorariosAsync()
+        public async Task<List<Horarios>> BuscarHorariosAsync()
         {
             try
             {
-                return await _repository.BuscarTodosHorariosAsync();
+                return await _repository.BuscarHorariosAsync();
             }
             catch (Exception)
             {
