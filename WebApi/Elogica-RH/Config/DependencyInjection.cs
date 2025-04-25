@@ -13,6 +13,23 @@ public static class DependencyInjection
         services.AddScoped<IHorariosRepository, HorariosRepository>();
         services.AddScoped<IHorariosService, HorariosService>();
 
+        #region Cargos
+        #region Service
+        services.AddScoped<ICargosServices, CargosService>();
+        #endregion
+        #region Repository
+        services.AddScoped<ICargosRepository, CargosRepository>();
+        #endregion
+        #endregion
+
+        #region Services
+        services.AddScoped<ISetorService, SetorService>();
+        #endregion
+
+        #region Repositories
+        services.AddScoped<ISetorRepository, SetorRepository>();
+        #endregion
+
         return services;
     }
 }
