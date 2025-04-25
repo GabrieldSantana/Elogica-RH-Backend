@@ -110,13 +110,17 @@ O backend utiliza um banco de dados SQL Server com o seguinte esquema (conforme 
 Atualmente, o backend não implementa autenticação. Todos os endpoints são acessíveis publicamente. Para uso em produção, considere adicionar autenticação baseada em JWT ou integrar com um provedor de identidade.
 
 ## Padrão de Nomenclatura de Métodos
+
 - **Métodos de Controladores, Serviços e Repositórios** (Exemplos):
+
 - `BuscarFuncionarioAsync`,
 - `BuscarFuncionarioPorIdAsync`,
 - `BuscarFuncionarioPaginadoAsync`,
 - `AdicionarFuncionarioAsync`,
 - `AtualizarFuncionarioAsync`,
+
 - `ExcluirFuncionarioAsync`
+
 
 ## Padrão de Commits
 Os commits seguem a especificação **Conventional Commits**:
