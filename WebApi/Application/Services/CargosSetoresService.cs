@@ -18,7 +18,7 @@ namespace Application.Services
         {
             try
             {
-                if (cargosSetores.CargosId <= 0 || cargosSetores.SetoresId <= 0)
+                if (cargosSetores.CargosId <= 0 )
                 {
                     throw new Exception("o cargosId deve ser positivo e maior que zero!");
                 }
