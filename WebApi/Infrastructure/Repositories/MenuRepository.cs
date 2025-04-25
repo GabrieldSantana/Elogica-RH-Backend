@@ -6,7 +6,7 @@ using Infrastructure.Interfaces;
 
 namespace Infrastructure.Repositories;
 
-public class MenuRepository: IMenuRepository
+public class MenuRepository : IMenuRepository
 {
     private readonly IDbConnection _connection;
 
