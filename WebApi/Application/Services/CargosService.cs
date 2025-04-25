@@ -82,7 +82,7 @@ namespace Application.Services
                 throw;
             }
         }
-        public async Task<bool> AtualizarCargosAsync(AtualizarCargosDto cargosDto)
+        public async Task<bool> AtualizarCargosAsync(int id,AtualizarCargosDto cargosDto)
         {
             try
             {
@@ -93,13 +93,14 @@ namespace Application.Services
                 var cargosExistentes = await _repository.BuscarCargosAsync();
 
                 var cargoExistente = cargosExistentes.FirstOrDefault(c =>
-                    RemoverAcentos(c.Titulo.Trim().ToLowerInvariant()) == tituloPadronizado);
+                    RemoverAcentos(c.Titulo.Trim().ToLowerInvariant()) == tituloPadronizado && c.Id != id);
 
                 if (cargoExistente != null)
                     throw new Exception("Já existe outro cargo com este título.");
 
                 var cargoAtualizado = new Cargos
                 {
+                    Id = id,
                     Titulo = cargosDto.Titulo.Trim(),
                     Descricao = cargosDto.Descricao,
                     SalarioBase = cargosDto.SalarioBase
@@ -118,7 +119,15 @@ namespace Application.Services
             try
             {
                 var cargos = await _repository.BuscarCargosAsync();
-                return _mapper.Map<IEnumerable<CargosDto>>(cargos);
+                var cargosDto = cargos.Select(c => new CargosDto
+                {
+                    Titulo = c.Titulo,
+                    Descricao = c.Descricao,
+                    SalarioBase = c.SalarioBase
+                });
+
+
+                return cargosDto;
             }
             catch (Exception)
             {
@@ -156,7 +165,7 @@ namespace Application.Services
                 throw;
             }
         }
-
+        
         public async Task<bool> ExcluirCargosAsync(int id)
         {
             try
