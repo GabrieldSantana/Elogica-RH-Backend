@@ -14,6 +14,7 @@ public static class DependencyInjection
         services.AddScoped<INotificador, Notificador>();
 
 
+
         #region Services
         services.AddScoped<ISetorService, SetorService>();
         #endregion
