@@ -13,7 +13,14 @@ public static class DependencyInjection
         services.AddScoped<IFuncionarioService, FuncionarioService>();
         services.AddScoped<INotificador, Notificador>();
 
-
+        #region Cargos
+        #region Service
+        services.AddScoped<ICargosServices, CargosService>();
+        #endregion
+        #region Repository
+        services.AddScoped<ICargosRepository, CargosRepository>();
+        #endregion
+        #endregion
 
         #region Services
         services.AddScoped<ISetorService, SetorService>();
@@ -22,6 +29,7 @@ public static class DependencyInjection
         #region Repositories
         services.AddScoped<ISetorRepository, SetorRepository>();
         #endregion
+
         return services;
     }
 }
