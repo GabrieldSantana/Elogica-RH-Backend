@@ -10,7 +10,7 @@ public class Funcionario
     public string Telefone { get; set; }
     public string Endereco { get; set; }
     public DateTime DataContratacao { get; set; }
-    public float Salario { get; set; }
+    public double Salario { get; set; }
     public bool Ativo { get; set; }
     public int CargosId { get; set; }
     public int SetoresId { get; set; }
