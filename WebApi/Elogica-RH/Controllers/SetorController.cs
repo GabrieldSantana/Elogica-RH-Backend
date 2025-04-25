@@ -21,8 +21,8 @@ public class SetorController : MainController
     {
         try
         {
-            var sucesso = await _setorService.AdicionarSetoresAsync(setorDto);
-            return CustomResponse(sucesso);
+            var retorno = await _setorService.AdicionarSetoresAsync(setorDto);
+            return CustomResponse(retorno);
         }
         catch (Exception ex)
         {
@@ -36,8 +36,8 @@ public class SetorController : MainController
     {
         try
         {
-            var sucesso = await _setorService.AtualizarSetoresAsync(id, setorDto);
-            return CustomResponse(sucesso);
+            var retorno = await _setorService.AtualizarSetoresAsync(id, setorDto);
+            return CustomResponse(retorno);
         }
         catch (Exception ex)
         {
@@ -51,8 +51,8 @@ public class SetorController : MainController
     {
         try
         {
-        var setores = await _setorService.BuscarSetoresAsync();
-        return CustomResponse(setores);
+        var retorno = await _setorService.BuscarSetoresAsync();
+        return CustomResponse(retorno);
         }
         catch (Exception ex)
         {
@@ -66,8 +66,8 @@ public class SetorController : MainController
     {
         try
         {
-            var setores = await _setorService.BuscarSetoresPaginadoAsync(pagina, quantidade);
-            return CustomResponse(setores);
+            var retorno = await _setorService.BuscarSetoresPaginadoAsync(pagina, quantidade);
+            return CustomResponse(retorno);
         }
         catch (Exception ex) 
         {
@@ -81,8 +81,8 @@ public class SetorController : MainController
     {
         try
         {
-        var setor = await _setorService.BuscarSetorPorIdAsync(id);
-        return CustomResponse(setor);
+        var retorno = await _setorService.BuscarSetorPorIdAsync(id);
+        return CustomResponse(retorno);
         }
         catch (Exception ex)
         {
@@ -96,8 +96,8 @@ public class SetorController : MainController
     {
         try
         {
-            var sucesso = await _setorService.ExcluirSetoresAsync(id);
-            return CustomResponse(sucesso);
+            var retorno = await _setorService.ExcluirSetoresAsync(id);
+            return CustomResponse(retorno);
         }
         catch(Exception ex)
         {
