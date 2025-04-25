@@ -123,4 +123,25 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         }
     }
     #endregion
+
+    #region Verificar Cargos Setores async
+    public async Task<bool> VerificarCargosSetoresAsync(int id)
+    {
+        try
+        {
+            var sqlVerificar = @"SELECT count(1) FROM CARGOSSETORES WHERE CARGOSID = @CARGOSID";
+
+            var verificacao = await _conn.QuerySingleAsync<int>(sqlVerificar, new { CARGOSID = id });
+
+            return verificacao > 0;
+            
+
+        }
+        catch (Exception ex) 
+        {
+
+            throw new Exception("Erro ao verifcar ID CargosSetores");
+        }
+    }
+    #endregion
 }

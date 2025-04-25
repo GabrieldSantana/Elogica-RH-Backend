@@ -80,13 +80,10 @@ public class CargosSetoresController : MainController
         try
         {
 
-            if (!ModelState.IsValid)
-            {
-
-            }
+            
 
             var cargosSetores = await _service.ExcluirCargosSetoresAsync(id);
-            return CustomResponse(ModelState);
+            return CustomResponse(id);
 
 
         }
