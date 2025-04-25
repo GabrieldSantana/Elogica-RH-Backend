@@ -174,9 +174,6 @@ namespace Application.Services
             }
         }
 
-        Task<IEnumerable<CargosDto>> ICargosServices.BuscarCargosAsync()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 };

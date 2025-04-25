@@ -125,16 +125,21 @@ public class CargosSetoresRepository : ICargosSetoresRepository
     #endregion
 
     #region Excluir CargosSetores 
-    public async Task<bool> ExcluirCargosSetoresAsync(int id)
+    public async Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores)
     {
         try
         {
-            var sqlDelete = string.Format("delete from CargosSetores where CargosId ={0} ", id);
+            var sqlDelete = @"delete from CargosSetores where CargosId = @CARGOSID and SETORESID = @SETORESID ";
+
+            var parametros = new
+            {
+                CARGOSID = cargosSetores.CargosId,
+                SETORESID = cargosSetores.SetoresId
+            };
 
 
 
-
-            var retorno = await _conn.ExecuteAsync(sqlDelete);
+            var retorno = await _conn.ExecuteAsync(sqlDelete, parametros);
 
             return retorno > 0;
         }

@@ -50,7 +50,7 @@ public class CargosSetoresController : MainController
             
             var resultado = await _service.AdicionarCargosSetoresAsync(cargosSetores);
             
-                return CustomResponse("CargosSetores Criado com sucesso!!");
+                return CustomResponse("CargosSetores criado com sucesso!!");
             
 
         }
@@ -65,17 +65,17 @@ public class CargosSetoresController : MainController
     #endregion
 
     #region Excluir CargosSetores
-    [HttpDelete("{id}")]
+    [HttpDelete]
 
-    public async Task<IActionResult> ExcluirCargosSetoresAsync(int id)
+    public async Task<IActionResult> ExcluirCargosSetoresAsync(CargosSetores cargosSetores)
     {
         try
         {
 
             
 
-            var resultado = await _service.ExcluirCargosSetoresAsync(id);
-            return CustomResponse(resultado);
+            var resultado = await _service.ExcluirCargosSetoresAsync(cargosSetores);
+            return CustomResponse("CargosSetores excluído com sucesso!");
 
 
         }
@@ -109,7 +109,7 @@ public class CargosSetoresController : MainController
 
 
             var resultado = await _service.AtualizarCargosSetoresAsync(cargosSetoresNovo, cargosSetoresAntigo);
-            return CustomResponse(resultado);
+            return CustomResponse("CargosSetores atualizado com sucesso!");
         }
         catch (Exception ex)
         {

@@ -141,21 +141,27 @@ public class CargosSetoresService : ICargosSetoresService
     #endregion
 
     #region Excluir cargosSetores
-    public async Task<bool> ExcluirCargosSetoresAsync(int cargosId)
+    public async Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores)
     {
         try
         {
-           if(cargosId <= 0)
+
+            if(cargosSetores.CargosId <=0 || cargosSetores.SetoresId <= 0)
             {
-                throw new ArgumentException("O Id fornecido deve ser positivo e maior que zero");
+                throw new Exception("Os Id fornecido devem ser positivos e maior que zero");
             }
 
-            await _cargosServices.BuscarCargosPorIdAsync(cargosId);
+            await _cargosServices.BuscarCargosPorIdAsync(cargosSetores.CargosId);
+            await _setorService.BuscarSetorPorIdAsync(cargosSetores.SetoresId);
+
+            var resultado = await _cargosSetoresRepository.ExcluirCargosSetoresAsync(cargosSetores);
+
+            return resultado;
 
 
-            var excluirCargosSetores = await _cargosSetoresRepository.ExcluirCargosSetoresAsync(cargosId);
+           
 
-            return excluirCargosSetores;
+           
         }
         catch (Exception)
         {
