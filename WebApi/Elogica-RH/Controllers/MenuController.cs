@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Elogica_RH.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("menus")]
 public class MenuController: MainController
 {
     private readonly IMenuService _menuService;
@@ -60,8 +60,8 @@ public class MenuController: MainController
         }
     }
 
-    [HttpGet("paginado")]
-    public async Task<IActionResult> BuscarMenuPaginadoAsync([FromQuery] int pagina = 1, [FromQuery] int quantidade = 10)
+    [HttpGet("{pagina}/{quantidade}")]
+    public async Task<IActionResult> BuscarMenuPaginadoAsync(int pagina = 1, int quantidade = 10)
     {
         try
         {
