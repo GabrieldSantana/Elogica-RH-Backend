@@ -110,9 +110,14 @@ O arquivo `appsettings.json` contém configurações, incluindo a string de cone
 Atualmente, o backend não implementa autenticação. Todos os endpoints são acessíveis publicamente. Para uso em produção, considere adicionar autenticação baseada em JWT ou integrar com um provedor de identidade.
 
 ## Padrão de Nomenclatura de Métodos
-- **Métodos de Controladores**: Use nomenclatura RESTful (por exemplo, `GetFuncionarios`, `CreateFuncionario`, `UpdateFuncionario`).
-- **Métodos de Serviços**: Use nomes descritivos que reflitam a ação (por exemplo, `ValidateSalarioBase`, `ScheduleVacation`).
-- **Métodos de Repositórios**: Use padrões de acesso a dados (por exemplo, `GetByIdAsync`, `AddAsync`, `UpdateAsync`).
+- **Métodos de Controladores, Serviços e Repositórios**:
+  Exemplos:
+- `BuscarFuncionarioAsync`,
+- `BuscarFuncionarioPorIdAsync`,
+- `BuscarFuncionarioPaginadoAsync`,
+- `AdicionarFuncionarioAsync`,
+- `AtualizarFuncionarioAsync`,
+- `ExcluirFuncionarioAsync`,
 
 ## Padrão de Commits
 Os commits seguem a especificação **Conventional Commits**:
