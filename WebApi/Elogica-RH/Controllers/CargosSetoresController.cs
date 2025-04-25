@@ -82,8 +82,8 @@ public class CargosSetoresController : MainController
 
             
 
-            var cargosSetores = await _service.ExcluirCargosSetoresAsync(id);
-            return CustomResponse(id);
+            var resultado = await _service.ExcluirCargosSetoresAsync(id);
+            return CustomResponse(resultado);
 
 
         }
@@ -103,8 +103,8 @@ public class CargosSetoresController : MainController
         try
         {
             
-            var retornoAtualizarCargosSetores = await _service.AtualizarCargosSetoresAsync(cargosSetores);
-            return CustomResponse(retornoAtualizarCargosSetores);
+            var resultado = await _service.AtualizarCargosSetoresAsync(cargosSetores);
+            return CustomResponse(resultado);
         }
         catch (Exception ex)
         {
@@ -124,9 +124,9 @@ public class CargosSetoresController : MainController
     {
         try
         {
-            var retornoBuscarCargosSetoresPaginado = await _service.BuscarCargosSetoresPaginadoAsync(quantidade, pagina);
+            var resultado = await _service.BuscarCargosSetoresPaginadoAsync(quantidade, pagina);
 
-            return CustomResponse(retornoBuscarCargosSetoresPaginado);
+            return CustomResponse(resultado);
         }
         catch (Exception ex)
         {
