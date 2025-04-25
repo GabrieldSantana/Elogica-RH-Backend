@@ -21,5 +21,5 @@ public class CriaMenuDto
     [Required]
     public int Ordem { get; set; }
     
-    public int MenuPaiId { get; set; }
+    public int? MenuPaiId { get; set; }
 }

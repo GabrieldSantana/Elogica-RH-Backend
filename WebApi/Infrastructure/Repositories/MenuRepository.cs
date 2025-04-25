@@ -1,3 +1,4 @@
+using System.Data;
 using System.Data.Common;
 using Dapper;
 using Domain.Models;
@@ -7,9 +8,9 @@ namespace Infrastructure.Repositories;
 
 public class MenuRepository: IMenuRepository
 {
-    private readonly DbConnection _connection;
+    private readonly IDbConnection _connection;
 
-    public MenuRepository(DbConnection connection)
+    public MenuRepository(IDbConnection connection)
     {
         _connection = connection;
     }
@@ -42,7 +43,7 @@ public class MenuRepository: IMenuRepository
         }
     }
 
-    public async Task<List<Menu>> BuscarMenuPorPaginaEQuantidadeAsync(int pagina, int quantidade)
+    public async Task<List<Menu>> BuscarMenuPaginadoAsync(int pagina, int quantidade)
     {
         try
         {
@@ -92,7 +93,7 @@ public class MenuRepository: IMenuRepository
                 Url = menu.Url,
                 Icone = menu.Icone,
                 Ordem = menu.Ordem,
-                MenuPaiId = menu.MenuPaiId
+                MenuPaiId = menu.MenuPaiId == 0 ? null : (int?)menu.MenuPaiId
             };
             
             var result = await _connection.ExecuteAsync(sql, parametros);
@@ -104,20 +105,20 @@ public class MenuRepository: IMenuRepository
         }
     }
 
-    public async Task<bool> AtualizarMenuAsync(Menu menu)
+    public async Task<bool> AtualizarMenuAsync(int id, Menu menu)
     {
         try
         {
             string sql = @"UPDATE MENU SET Titulo = @Titulo, Descricao = @Descricao, Url = @Url, Icone = @Icone, Ordem = @Ordem, MenuPaiId = @MenuPaiId WHERE Id = @Id";
             var parametros = new
             {
-                Id = menu.Id,
+                Id = id,
                 Titulo = menu.Titulo,
                 Descricao = menu.Descricao,
                 Url = menu.Url,
                 Icone = menu.Icone,
                 Ordem = menu.Ordem,
-                MenuPaiId = menu.MenuPaiId
+                MenuPaiId = menu.MenuPaiId == 0 ? null : (int?)menu.MenuPaiId
             };
             
             var result = await _connection.ExecuteAsync(sql, parametros);

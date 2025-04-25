@@ -59,10 +59,10 @@ public class MenuService : IMenuService
         }
     }
 
-    public async Task<bool> AtualizarMenuAsync(AtualizaMenuDto menu)
+    public async Task<bool> AtualizarMenuAsync(int id, AtualizaMenuDto menu)
     {
         Menu menuObj = _mapper.Map<Menu>(menu);
-        var result = await _repository.AtualizarMenuAsync(menuObj);
+        var result = await _repository.AtualizarMenuAsync(id, menuObj);
         return result;
     }
 
@@ -70,7 +70,7 @@ public class MenuService : IMenuService
     {
         try
         {
-            List<Menu> menu = await _repository.BuscarMenuPorPaginaEQuantidadeAsync(pagina, quantidade);
+            List<Menu> menu = await _repository.BuscarMenuPaginadoAsync(pagina, quantidade);
             var listaRespostaMenu = _mapper.Map<List<RespostaMenuDto>>(menu);
             int quantidadeMenu = await _repository.TotalMenuAsync();
 

@@ -4,9 +4,6 @@ namespace Domain.Dtos;
 
 public class AtualizaMenuDto
 {
-    [Key]
-    public int Id { get; set; }
-    
     [Required]
     [MaxLength(50)]
     public string Titulo { get; set; }
