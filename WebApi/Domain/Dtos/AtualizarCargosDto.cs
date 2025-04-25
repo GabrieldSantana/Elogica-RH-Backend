@@ -5,8 +5,6 @@ namespace Domain.Dtos
     public class AtualizarCargosDto
     {
         [Required]
-        public int Id { get; set; }
-        [Required]
         [MaxLength(50, ErrorMessage = "Máximo de 50 caracteres para Titulo.")]
         public string Titulo { get; set; }
         [Required]

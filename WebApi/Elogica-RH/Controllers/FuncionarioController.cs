@@ -92,7 +92,7 @@ public class FuncionarioController : MainController
         }
     }
 
-    [HttpPut("desativar/{id}")]
+    [HttpPut("desativa/{id}")]
     public async Task<IActionResult> DesativarFuncionarioAsync(int id)
     {
         try
