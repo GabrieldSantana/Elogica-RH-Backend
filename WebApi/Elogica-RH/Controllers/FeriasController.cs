@@ -2,48 +2,52 @@
 using Domain.Dtos;
 using Application.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using Domain.Main;
-using AutoMapper;
-using Application.DTOs;
 
 namespace WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("ferias")]
     public class FeriasController : MainController
     {
         private readonly IFeriasService _feriasService;
-        private readonly INotificador _notificador;
-        private readonly IMapper _mapper;
-        public FeriasController(INotificador notificador, IFeriasService feriasService, IMapper mapper) : base(notificador)
+
+        public FeriasController(IFeriasService feriasService, INotificador notificador)
+            : base(notificador)
         {
-            _notificador = notificador;
             _feriasService = feriasService;
-            _mapper = mapper;
         }
 
-        [HttpGet("paginado")]
-
-
-        public async Task<IActionResult> BuscarFeriasPaginadoAsync([FromQuery] int pagina = 1, [FromQuery] int quantidade = 10)
+        [HttpGet("{pagina}/{quantidade}")]
+        public async Task<IActionResult> BuscarFeriasPaginadoAsync(
+             int pagina = 1,
+             int quantidade = 10)
         {
             try
             {
-                if (pagina < 1 || quantidade < 1)
-                    return CustomResponse(ModelState);
-
-                var resultado = await _feriasService.BuscarFeriasPaginadoAsync(pagina, quantidade);
-                return CustomResponse(resultado);
-
+                var retorno = await _feriasService.BuscarFeriasPaginadoAsync(pagina, quantidade);
+                return CustomResponse(retorno);
             }
             catch (Exception ex)
             {
-                throw;
+                NotificarErro($"Ocorreu um erro ao buscar férias paginadas: {ex.Message}");
+                return CustomResponse();
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> BuscarFeriasAsync() => Ok(await _feriasService.BuscarFeriasAsync());
+        public async Task<IActionResult> BuscarFeriasAsync()
+        {
+            try
+            {
+                var retorno = await _feriasService.BuscarFeriasAsync();
+                return CustomResponse(retorno);
+            }
+            catch (Exception ex)
+            {
+                NotificarErro($"Ocorreu um erro ao buscar férias: {ex.Message}");
+                return CustomResponse();
+            }
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> BuscarFeriasPorIdAsync(int id)
@@ -51,12 +55,16 @@ namespace WebApi.Controllers
             try
             {
                 var ferias = await _feriasService.BuscarFeriasPorIdAsync(id);
-                if (ferias == null) return NotFound();
+                if (ferias == null)
+                {
+                    NotificarErro("Férias não encontradas");
+                    return CustomResponse();
+                }
                 return CustomResponse(ferias);
             }
             catch (Exception ex)
             {
-                NotificarErro(ex.Message);
+                NotificarErro($"Ocorreu um erro ao buscar férias por ID: {ex.Message}");
                 return CustomResponse();
             }
         }
@@ -71,8 +79,15 @@ namespace WebApi.Controllers
                     return CustomResponse(ModelState);
                 }
 
-                var result = await _feriasService.AdicionarFeriasAsync(feriasDto);
-                return CustomResponse(nameof(BuscarFeriasPorIdAsync), new { id = result.Id }, result);
+                var ferias = new Ferias
+                {
+                    DataInicio = feriasDto.DataInicio,
+                    DataFim = feriasDto.DataFim,
+                    FuncionarioId = feriasDto.FuncionarioId
+                };
+
+                var retorno = await _feriasService.AdicionarFeriasAsync(ferias);
+                return CustomResponse(retorno);
             }
             catch (ValidationException ex)
             {
@@ -83,19 +98,36 @@ namespace WebApi.Controllers
 
         }
 
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarFeriasAsync(int id, [FromBody] Ferias dto)
+        public async Task<IActionResult> AtualizarFeriasAsync(int id, [FromBody] FeriasDto dto)
         {
-            if (id != dto.Id) return CustomResponse();
+            try
+        {
             await _feriasService.AtualizarFeriasAsync(id, dto);
-            return NoContent();
+                return CustomResponse();
+            }
+            catch (ValidationException ex)
+            {
+                NotificarErro(ex.Message);
+                return CustomResponse();
+            }
+
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> ExcluirFeriasAsync(int id)
         {
+            try
+            {
             await _feriasService.ExcluirFeriasAsync(id);
-            return NoContent();
+                return CustomResponse();
+            }
+            catch (ValidationException ex)
+            {
+                NotificarErro(ex.Message);
+                return CustomResponse();
+            }
 
         }
 

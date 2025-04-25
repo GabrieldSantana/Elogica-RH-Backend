@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Models;
 
 namespace Application.Interfaces
 {
@@ -7,8 +8,8 @@ namespace Application.Interfaces
         Task<IEnumerable<Ferias>> BuscarFeriasAsync();
         Task<RetornoPaginado<Ferias>> BuscarFeriasPaginadoAsync(int pagina, int quantidade);
         Task<Ferias> BuscarFeriasPorIdAsync(int id);
-        Task<Ferias> AdicionarFeriasAsync(Ferias dto);
-        Task AtualizarFeriasAsync(int id, Ferias dto);
+        Task<Ferias> AdicionarFeriasAsync(Ferias ferias);
+        Task AtualizarFeriasAsync(int id, FeriasDto dto);
         Task ExcluirFeriasAsync(int id);
     }
 }

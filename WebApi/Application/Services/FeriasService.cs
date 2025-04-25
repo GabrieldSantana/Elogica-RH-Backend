@@ -1,109 +1,108 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
-using Application.DTOs;
+using Domain.Models;
 using Application.Interfaces;
 using AutoMapper;
 using Domain;
 using Infrastructure.Interfaces;
+using Domain.Dtos;
 
 namespace Application.Services
 {
     public class FeriasService : IFeriasService
     {
         private readonly IFeriasRepository _feriasRepository;
-        private readonly IFuncionarioRepository _funcionarioRepository;
         private readonly IMapper _mapper;
+        private readonly IFuncionarioService _funcionarioService;
 
-        public FeriasService(
-            IFeriasRepository feriasRepository,
-            IFuncionarioRepository funcionarioRepository,
-            IMapper mapper)
+        public FeriasService(IFeriasRepository feriasRepository, IMapper mapper, IFuncionarioService funcionarioService)
         {
             _feriasRepository = feriasRepository;
-            _funcionarioRepository = funcionarioRepository;
             _mapper = mapper;
+            _funcionarioService = funcionarioService;
         }
+
         public async Task<RetornoPaginado<Ferias>> BuscarFeriasPaginadoAsync(int pagina, int quantidade)
         {
+            try
+            {
+                if (pagina < 1 || quantidade < 1)
+                    throw new ValidationException("Página e quantidade devem ser maiores que zero.");
+
             var resultado = await _feriasRepository.BuscarFeriasPaginadoAsync(pagina, quantidade);
 
-            return new RetornoPaginado<FeriasDto>
+                return new RetornoPaginado<Ferias>
             {
                 TotalRegistro = resultado.TotalRegistro,
-                Quantidade = resultado.Quantidade,
-                Pagina = resultado.Pagina,
-                RetornoPagina = _mapper.Map<List<Ferias>>(resultado.RetornoPagina)
+                    Registros = resultado.Registros
             };
+        }
+            catch (Exception)
+            {
+                throw new Exception("Não foi possível realizar retorno paginado");
+            }
         }
         public async Task<IEnumerable<Ferias>> BuscarFeriasAsync()
         {
+            try
+            {
             var ferias = await _feriasRepository.BuscarFeriasAsync();
             return _mapper.Map<IEnumerable<Ferias>>(ferias);
         }
-
+            catch (Exception)
+            {
+                throw new Exception("Não foi possível realizar a busca de férias");
+            }
+        }
         public async Task<Ferias> BuscarFeriasPorIdAsync(int id)
         {
+            try
+            {
             var ferias = await _feriasRepository.BuscarFeriasPorIdAsync(id);
             return _mapper.Map<Ferias>(ferias);
         }
-
-        public async Task<Ferias> AdicionarFeriasAsync(Ferias dto)
+            catch (Exception)
+        {
+                throw new Exception("Não foi possível realizar a busca de por ID");
+            }
+        }
+        public async Task<Ferias> AdicionarFeriasAsync(Ferias ferias)
         {
             try
             {
 
-                var funcionario = await _funcionarioRepository.BuscarFeriasPorIdAsync(dto.FuncionarioId);
-
+                var funcionario = await _funcionarioService.BuscarFuncionarioPorIdAsync(ferias.FuncionarioId);
                 if (funcionario == null)
-                {
-                    throw new ValidationException($"Não foi possível encontrar um funcionário com o ID {dto.FuncionarioId}");
-                }
-                var ferias = _mapper.Map<Ferias>(dto);
+                    throw new ValidationException("Funcionário não encontrado.");
 
                 await ValidarRegrasFerias(ferias, funcionario);
 
-
-                var feriasCriada = await _feriasRepository.BuscarFeriasAsync(ferias);
-
-                return _mapper.Map<Ferias>(feriasCriada);
+                return await _feriasRepository.AdicionarFeriasAsync(ferias);
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Erro ao criar férias: {ex.Message}");
-                throw;
+                throw new Exception("Não foi possível adicionar férias");
             }
         }
-        public async Task AtualizarFeriasAsync(int id, Ferias dto)
+        public async Task AtualizarFeriasAsync(int id, FeriasDto dto)
         {
             try
             {
-                Console.WriteLine($"Buscando funcionário com ID: {dto.FuncionarioId}");
+                ;
                 var ferias = _mapper.Map<Ferias>(dto);
                 ferias.Id = id;
 
-                var feriasExistente = await _feriasRepository.BuscarFeriasPorIdAsync(ferias.Id);
-                if (feriasExistente == null)
+                if (ferias == null)
                 {
                     throw new KeyNotFoundException($"Férias com ID {ferias.Id} não encontradas");
                 }
 
-                var funcionario = await _funcionarioRepository.ObterPorIdAsync(ferias.FuncionarioId);
-                Console.WriteLine($"Funcionário encontrado: {funcionario?.Id} - {funcionario?.Nome}");
+                var funcionario = await _funcionarioService.BuscarFuncionarioPorIdAsync(ferias.FuncionarioId);
 
                 if (funcionario == null)
                 {
 
-                    var funcionarioExiste = await _funcionarioRepository.FuncionarioExiste(ferias.FuncionarioId);
-                    Console.WriteLine($"Verificação direta no banco: {funcionarioExiste}");
-
-                    if (!funcionarioExiste)
-                    {
                         throw new ValidationException($"Funcionário com ID {ferias.FuncionarioId} não encontrado no banco de dados");
-                    }
-                    else
-                    {
-                        throw new ValidationException($"Funcionário com ID {ferias.FuncionarioId} existe, mas não pôde ser carregado");
-                    }
                 }
 
                 await ValidarRegrasFerias(ferias, funcionario);
@@ -117,6 +116,7 @@ namespace Application.Services
                 throw;
             }
         }
+
         public async Task ExcluirFeriasAsync(int id)
         {
             await _feriasRepository.ExcluirFeriasAsync(id);
@@ -124,52 +124,10 @@ namespace Application.Services
 
         private async Task ValidarRegrasFerias(Ferias ferias, Funcionario funcionario)
         {
-            // 1. Validação básica de datas
-            if (ferias.DataFim <= ferias.DataInicio)
-            {
-                throw new ValidationException("A data final deve ser maior que a data inicial");
-            }
+   
 
-            // 2. Verificar antecedência mínima de 1 mês
-            var hoje = DateTime.Today;
-            var umMesAFrente = hoje.AddMonths(1);
-
-            if (ferias.DataInicio < umMesAFrente)
-            {
-                throw new ValidationException($"As férias devem ser agendadas com pelo menos 1 mês de antecedência. Data mínima permitida: {umMesAFrente:dd/MM/yyyy}");
-            }
-
-            // 3. Verificar tempo mínimo de empresa (1 ano)
-            if (funcionario.DataContratacao.AddYears(1) > hoje)
-            {
-                throw new ValidationException($"O funcionário {funcionario.Nome} foi contratado em {funcionario.DataContratacao:dd/MM/yyyy} " +
-                    $"e ainda não completou 1 ano de empresa.");
-            }
-
-            // 4. Verificar conflitos de período
-            if (await _feriasRepository.FuncionarioTemFerias(ferias.FuncionarioId, ferias.DataInicio, ferias.DataFim))
-            {
-                var feriasExistentes = await ObterFeriasDoFuncionarioNoAno(ferias.FuncionarioId, ferias.DataInicio.Year);
-                var periodos = feriasExistentes.Select(f => $"{f.DataInicio:dd/MM/yyyy} a {f.DataFim:dd/MM/yyyy}");
-
-                throw new ValidationException($"Já existem férias cadastradas para este funcionário nos seguintes períodos: {string.Join(", ", periodos)}");
-            }
-
-            // 5. Verificar limite de dias e períodos
-            var feriasDoAno = await ObterFeriasDoFuncionarioNoAno(ferias.FuncionarioId, ferias.DataInicio.Year);
-            var diasSolicitados = (ferias.DataFim - ferias.DataInicio).Days + 1;
-
-            if (feriasDoAno.Count() >= 3)
-            {
-                throw new ValidationException("Limite máximo de 3 períodos de férias por ano já foi atingido");
-            }
-
-            var totalDias = feriasDoAno.Sum(f => (f.DataFim - f.DataInicio).Days + 1) + diasSolicitados;
-            if (totalDias > 30)
-            {
-                throw new ValidationException($"O total de dias de férias não pode exceder 30 dias por ano. Dias já agendados: {totalDias - diasSolicitados}");
-            }
         }
+
         private async Task<IEnumerable<Ferias>> ObterFeriasDoFuncionarioNoAno(int funcionarioId, int ano)
         {
             var todasFerias = await _feriasRepository.BuscarFeriasAsync();
@@ -178,5 +136,15 @@ namespace Application.Services
                            f.DataInicio.Year == ano)
                 .ToList();
         }
+        private async Task<IEnumerable<Ferias>> ObterFeriasDoFuncionarioNoPeriodo(int funcionarioId, DateTime dataInicio, DateTime dataFim)
+        {
+            var todasFerias = await _feriasRepository.BuscarFeriasAsync();
+            return todasFerias
+                .Where(f => f.FuncionarioId == funcionarioId &&
+                           f.DataInicio >= dataInicio &&
+                           f.DataFim <= dataFim)
+                .ToList();
+        }
+
     }
 }
