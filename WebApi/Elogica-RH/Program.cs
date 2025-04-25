@@ -20,6 +20,9 @@ builder.Services.AddScoped<IDbConnection>(provider =>
 
 builder.Services.DependencInjection(builder.Configuration);
 
+builder.Services.AddScoped<ICargosRepository, CargosRepository>();
+builder.Services.AddScoped<ICargosServices, CargosService>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
@@ -36,6 +39,8 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod();
     });
 });
+
+
 
 var app = builder.Build();
 
