@@ -43,9 +43,32 @@ public class CargosSetoresRepository : ICargosSetoresRepository
 
     #region Atualizar CargosSetores
     //Voltar mais tarde 
-    public Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
+    public async Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var sql = @"UPDATE CARGOSSETORES SET CARGOSID = @CARGOSIDSET ,SETORESID = @SETORESID 
+                WHERE CARGOSID = @CARGOSID AND SETORESID = @SETORESID";
+
+            var parametros = new
+            {
+                CARGOSIDSET = cargosSetores.CargosId,
+                SETORESIDSET = cargosSetores.SetoresId,
+                CARGOSID = cargosSetores.CargosId,
+                SETORESID = cargosSetores.SetoresId
+            };
+
+            var resultado = await _conn.ExecuteAsync(sql, parametros);
+
+            return resultado > 0;
+
+
+        }
+        catch (Exception ex)
+        {
+
+            throw new ArgumentException("Erro ao atualizar CargosSetores");
+        }
     }
     #endregion
 
@@ -134,10 +157,10 @@ public class CargosSetoresRepository : ICargosSetoresRepository
             var verificacao = await _conn.QuerySingleAsync<int>(sqlVerificar, new { CARGOSID = id });
 
             return verificacao > 0;
-            
+
 
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
 
             throw new Exception("Erro ao verifcar ID CargosSetores");
