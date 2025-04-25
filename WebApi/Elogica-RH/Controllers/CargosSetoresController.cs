@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Application.Interfaces;
+using Domain.Dtos;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
@@ -26,11 +27,6 @@ public class CargosSetoresController : MainController
     {
         try
         {
-            if (!ModelState.IsValid)
-            {
-
-            }
-
 
             var resultado = await _service.BuscarCargosSetoresAsync();
             return CustomResponse(resultado);
@@ -98,12 +94,25 @@ public class CargosSetoresController : MainController
 
     #region Atualizar Cargos Setores
     [HttpPut]
-    public async Task<IActionResult> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
+    public async Task<IActionResult> AtualizarCargosSetoresAsync([FromBody] AtualizarCargosSetoresDto atualizarCargos)
     {
         try
         {
-            
-            var resultado = await _service.AtualizarCargosSetoresAsync(cargosSetores);
+
+            var cargosSetoresAntigo = new CargosSetores
+            { 
+                CargosId = atualizarCargos.CargosIdAntigo,
+                SetoresId = atualizarCargos.SetoresIdAntigo
+            };
+
+            var cargosSetoresNovo = new CargosSetores
+            {
+                CargosId = atualizarCargos.CargosIdNovo,
+                SetoresId = atualizarCargos.SetoresIdNovo
+            };
+
+
+            var resultado = await _service.AtualizarCargosSetoresAsync(cargosSetoresNovo, cargosSetoresAntigo);
             return CustomResponse(resultado);
         }
         catch (Exception ex)

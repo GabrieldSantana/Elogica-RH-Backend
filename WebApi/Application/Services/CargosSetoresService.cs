@@ -55,7 +55,7 @@ public class CargosSetoresService : ICargosSetoresService
                 throw new Exception("Os IDs do relacionamento novo (Cargo e Setor) devem ser positivos e maiores que zero.");
             }
 
-            if(cargosSetoresAntigo.SetoresId == cargosSetoresNovo.SetoresId && cargosSetoresNovo.SetoresId == cargosSetoresNovo.CargosId)
+            if(cargosSetoresAntigo.SetoresId == cargosSetoresNovo.SetoresId && cargosSetoresAntigo.CargosId == cargosSetoresNovo.CargosId)
             {
                 throw new Exception("Os valores do novo relacionamento são iguais aos do relacionamento antigo. Nenhuma atualização é necessária.");
 
@@ -63,7 +63,7 @@ public class CargosSetoresService : ICargosSetoresService
 
             
 
-            var atualizarCargosSetores = await _cargosSetoresRepository.AtualizarCargosSetoresAsync(cargosSetoresAntigo, cargosSetoresNovo);
+            var atualizarCargosSetores = await _cargosSetoresRepository.AtualizarCargosSetoresAsync(cargosSetoresNovo, cargosSetoresAntigo);
 
             return atualizarCargosSetores;
         }

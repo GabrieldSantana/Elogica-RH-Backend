@@ -47,18 +47,16 @@ public class CargosSetoresRepository : ICargosSetoresRepository
     {
         try
         {
-            var sqlDelete = @"DELETE FROM CARGOSSETORES WEHRE CARGOSID = @CARGOSIDANTIGO AND SETORESID= @SETORESIDANTIGO";
+            var sqlUpdate = @"UPDATE CargosSetores 
+                                  SET CargosId = @CargosIdNovo, SetoresId = @SetoresIdNovo 
+                                  WHERE CargosId = @CargosIdAntigo AND SetoresId = @SetoresIdAntigo";
 
-            await _conn.ExecuteAsync(sqlDelete, new { 
-            CARGOSIDANTIGO = cargosSetoresAntigo.CargosId,
-            SETORESIDANTIGO = cargosSetoresAntigo.SetoresId
-            });
-
-            var sqlInsert = @"INSERT INTO CARGOSSETORES(CARGOSID,SETORESID) VALUES(@CARGOSIDNOVO,SETORESIDNOVO)";
-             var resultado = await _conn.ExecuteAsync(sqlInsert, new
+            var resultado = await _conn.ExecuteAsync(sqlUpdate, new
             {
-                CARGOSIDNOVO = cargosSetoresNovo.CargosId,
-                SETORESIDNOVO = cargosSetoresNovo.SetoresId
+                CargosIdNovo = cargosSetoresNovo.CargosId,
+                SetoresIdNovo = cargosSetoresNovo.SetoresId,
+                CargosIdAntigo = cargosSetoresAntigo.CargosId,
+                SetoresIdAntigo = cargosSetoresAntigo.SetoresId
             });
 
             return resultado > 0;
