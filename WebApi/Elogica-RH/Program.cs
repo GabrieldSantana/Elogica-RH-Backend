@@ -1,8 +1,8 @@
 using Application.Interfaces;
 using Application.Services;
-using Domain.Notificacao;
 using Elogica_RH.Config;
 using Infrastructure.Interfaces;
+using Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
 using System.Data;
 

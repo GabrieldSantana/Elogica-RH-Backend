@@ -1,4 +1,8 @@
-﻿using Application.Interfaces;
+﻿
+
+
+
+using Application.Interfaces;
 using Application.Services;
 using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
@@ -21,12 +25,23 @@ public static class DependencyInjection
         #endregion
         #endregion
 
+        #region Setor
         #region Services
         services.AddScoped<ISetorService, SetorService>();
         #endregion
 
         #region Repositories
         services.AddScoped<ISetorRepository, SetorRepository>();
+        #endregion
+        #endregion
+
+        #region Cargos Setores
+        #region Services
+        services.AddScoped<ICargosSetoresService, CargosSetoresService>();
+        #endregion
+        #region Repository
+        services.AddScoped<ICargosSetoresRepository, CargosSetoresRepository>();
+            #endregion
         #endregion
 
         return services;

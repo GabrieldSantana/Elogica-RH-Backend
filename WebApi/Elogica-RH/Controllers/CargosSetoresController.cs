@@ -1,9 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Dtos;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 
 namespace Elogica_RH.Controllers;
 
@@ -48,10 +46,8 @@ public class CargosSetoresController : MainController
         try
         {
 
-            if (!ModelState.IsValid)
-            {
-
-            }
+           
+            
             var resultado = await _service.AdicionarCargosSetoresAsync(cargosSetores);
             
                 return CustomResponse(resultado);

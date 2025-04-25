@@ -8,17 +8,27 @@ public class CargosSetoresService : ICargosSetoresService
 {
 
     private readonly ICargosSetoresRepository _cargosSetoresRepository;
+    private readonly ICargosServices _cargosServices;
+    private readonly ISetorService _setorService;
 
-    public CargosSetoresService(ICargosSetoresRepository cargosSetoresRepository)
+    public CargosSetoresService(ICargosSetoresRepository cargosSetoresRepository, ICargosServices cargosServices, ISetorService setorService)
     {
         _cargosSetoresRepository = cargosSetoresRepository;
+        _cargosServices = cargosServices;
+        _setorService = setorService;
     }
+
+
+
+
 
     #region Adicionar cargosSetores
     public async Task<int> AdicionarCargosSetoresAsync(CargosSetores cargosSetores)
     {
         try
         {
+
+
             if (cargosSetores.CargosId <= 0 )
             {
                 throw new Exception("o cargosId deve ser positivo e maior que zero!");
@@ -28,6 +38,9 @@ public class CargosSetoresService : ICargosSetoresService
                 throw new Exception("o SetoresId deve ser positivo e maior que zero!");
             }
 
+            await _setorService.BuscarSetorPorIdAsync(cargosSetores.SetoresId);
+
+            await _cargosServices.BuscarCargosPorIdAsync(cargosSetores.CargosId);
             var adicionarCargosSetores = await _cargosSetoresRepository.AdicionarCargosSetoresAsync(cargosSetores);
 
             return adicionarCargosSetores;
@@ -60,6 +73,15 @@ public class CargosSetoresService : ICargosSetoresService
                 throw new Exception("Os valores do novo relacionamento são iguais aos do relacionamento antigo. Nenhuma atualização é necessária.");
 
             }
+
+
+            await _cargosServices.BuscarCargosPorIdAsync(cargosSetoresAntigo.CargosId);
+            await _cargosServices.BuscarCargosPorIdAsync(cargosSetoresNovo.CargosId);
+
+
+            await _setorService.BuscarSetorPorIdAsync(cargosSetoresNovo.SetoresId);
+            await _setorService.BuscarSetorPorIdAsync(cargosSetoresAntigo.SetoresId);
+      
 
             
 
@@ -128,12 +150,7 @@ public class CargosSetoresService : ICargosSetoresService
                 throw new ArgumentException("O Id fornecido deve ser positivo e maior que zero");
             }
 
-            var cargosIdExistente = await _cargosSetoresRepository.VerificarCargosSetoresAsync(cargosId);
-
-            if (!cargosIdExistente)
-            {
-                throw new ArgumentException("O CargosId fornecido não existe no banco de dados");
-            }
+            await _cargosServices.BuscarCargosPorIdAsync(cargosId);
 
 
             var excluirCargosSetores = await _cargosSetoresRepository.ExcluirCargosSetoresAsync(cargosId);

@@ -123,7 +123,7 @@
 
 //                var offset = (pagina - 1) * tamanhoPagina;
 
-                
+
 //                var queryItens = @"
 //                    SELECT 
 //                        f.Id, f.DataInicio, f.DataFim, f.FuncionarioId,
@@ -138,7 +138,7 @@
 
 //                var queryTotal = "SELECT COUNT(*) FROM Ferias";
 
-            
+
 //                var queryItensTask = connection.QueryAsync<Ferias, Funcionario, Ferias>(
 //                    queryItens,
 //                    (ferias, funcionario) =>
