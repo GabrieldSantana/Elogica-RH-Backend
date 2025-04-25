@@ -149,7 +149,31 @@ public class CargosSetoresRepository : ICargosSetoresRepository
             throw new Exception("Erro ao deleter cargosSetores");
         }
     }
+    #region Verificar Cargos Setores
+    public async Task<bool> VerificarCargosSetores(CargosSetores cargosSetores)
+    {
+        try
+        {
+            var sql = @"SELECT COUNT(1) FROM CargosSetores 
+                     WHERE CargosId = @CargosId AND SetoresId = @SetoresId";
+
+            var paramentros = new
+            {
+                CARGOSID = cargosSetores.CargosId,
+                SETORESID = cargosSetores.SetoresId
+            };
+
+            return await _conn.ExecuteAsync(sql, paramentros) > 0;
+
+        }
+        catch (Exception)
+        {
+
+            throw new Exception("Erro ao verificar cargosSetores");
+        }
+    }
+    #endregion
     #endregion
 
-   
+
 }
