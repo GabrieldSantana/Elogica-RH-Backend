@@ -62,10 +62,6 @@ public class SetorRepository : ISetorRepository
         {
             string sql = $"SELECT * FROM Setores WHERE Id={id}";
             var setor = await _connection.QueryFirstOrDefaultAsync<Setor>(sql);
-            if (setor == null)
-            {
-                throw new Exception("Setor não encontrado");
-            }
             return setor;
         }
         catch (Exception)
