@@ -41,16 +41,29 @@ public class CargosSetoresService : ICargosSetoresService
     #endregion
 
     #region Atualizar cargosSetoes
-    public async Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
+    public async Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetoresNovo, CargosSetores cargosSetoresAntigo)
     {
         try
         {
-            if(cargosSetores.CargosId <=0  || cargosSetores.SetoresId <= 0)
+            if( cargosSetoresAntigo == null|| cargosSetoresAntigo.CargosId <= 0 || cargosSetoresAntigo.SetoresId <= 0)
             {
-                throw new Exception("Id deve ser positivo e maior que zero");
+                throw new Exception("Os IDs do relacionamento antigo (Cargo e Setor) devem ser positivos e maiores que zero.");
             }
 
-            var atualizarCargosSetores = await _cargosSetoresRepository.AtualizarCargosSetoresAsync(cargosSetores);
+            if (cargosSetoresNovo == null || cargosSetoresNovo.CargosId <= 0 || cargosSetoresNovo.SetoresId <= 0)
+            {
+                throw new Exception("Os IDs do relacionamento novo (Cargo e Setor) devem ser positivos e maiores que zero.");
+            }
+
+            if(cargosSetoresAntigo.SetoresId == cargosSetoresNovo.SetoresId && cargosSetoresNovo.SetoresId == cargosSetoresNovo.CargosId)
+            {
+                throw new Exception("Os valores do novo relacionamento são iguais aos do relacionamento antigo. Nenhuma atualização é necessária.");
+
+            }
+
+            
+
+            var atualizarCargosSetores = await _cargosSetoresRepository.AtualizarCargosSetoresAsync(cargosSetoresAntigo, cargosSetoresNovo);
 
             return atualizarCargosSetores;
         }

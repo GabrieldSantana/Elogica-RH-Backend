@@ -43,28 +43,29 @@ public class CargosSetoresRepository : ICargosSetoresRepository
 
     #region Atualizar CargosSetores
     //Voltar mais tarde 
-    public async Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
+    public async Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetoresNovo, CargosSetores cargosSetoresAntigo)
     {
         try
         {
-            var sql = @"UPDATE CARGOSSETORES SET CARGOSID = @CARGOSIDSET ,SETORESID = @SETORESID 
-                WHERE CARGOSID = @CARGOSID AND SETORESID = @SETORESID";
+            var sqlDelete = @"DELETE FROM CARGOSSETORES WEHRE CARGOSID = @CARGOSIDANTIGO AND SETORESID= @SETORESIDANTIGO";
 
-            var parametros = new
+            await _conn.ExecuteAsync(sqlDelete, new { 
+            CARGOSIDANTIGO = cargosSetoresAntigo.CargosId,
+            SETORESIDANTIGO = cargosSetoresAntigo.SetoresId
+            });
+
+            var sqlInsert = @"INSERT INTO CARGOSSETORES(CARGOSID,SETORESID) VALUES(@CARGOSIDNOVO,SETORESIDNOVO)";
+             var resultado = await _conn.ExecuteAsync(sqlInsert, new
             {
-                CARGOSIDSET = cargosSetores.CargosId,
-                SETORESIDSET = cargosSetores.SetoresId,
-                CARGOSID = cargosSetores.CargosId,
-                SETORESID = cargosSetores.SetoresId
-            };
-
-            var resultado = await _conn.ExecuteAsync(sql, parametros);
+                CARGOSIDNOVO = cargosSetoresNovo.CargosId,
+                SETORESIDNOVO = cargosSetoresNovo.SetoresId
+            });
 
             return resultado > 0;
 
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
 
             throw new ArgumentException("Erro ao atualizar CargosSetores");
