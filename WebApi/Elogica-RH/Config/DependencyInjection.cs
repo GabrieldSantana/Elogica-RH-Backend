@@ -5,35 +5,44 @@ using Application.Services;
 using AutoMapper;
 using Application;
 
-namespace Infrastructure.Config
+namespace Elogica_RH.Config;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection DependencInjection(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-        {
-            
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new AutoMapperConfig());
-            });
 
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
+        
+        services.AddScoped<IMenuRepository, MenuRepository>();
+        services.AddScoped<IMenuService, MenuService>();
+        services.AddScoped<INotificador, Notificador>();
 
+        services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
+        services.AddScoped<IFuncionarioService, FuncionarioService>();
+        
+        services.AddScoped<INotificador, Notificador>();
+        
 
+        services.AddScoped<IHorariosRepository, HorariosRepository>();
+        services.AddScoped<IHorariosService, HorariosService>();
 
-            #region Ferias
+        #region Cargos
+        #region Service
+        services.AddScoped<ICargosServices, CargosService>();
+        #endregion
+        #region Repository
+        services.AddScoped<ICargosRepository, CargosRepository>();
+        #endregion
+        #endregion
 
-            //Registro dos serviços
-            services.AddScoped<IFeriasService, FeriasService>();
+        #region Services
+        services.AddScoped<ISetorService, SetorService>();
+        #endregion
 
+        #region Repositories
+        services.AddScoped<ISetorRepository, SetorRepository>();
+        #endregion
 
-            //Registro dos repositórios
-            services.AddScoped<IFeriasRepository, FeriasRepository>();
-            services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
-            #endregion
-
-            return services;
-        }
+        return services;
     }
 }

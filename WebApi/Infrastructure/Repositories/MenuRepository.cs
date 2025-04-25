@@ -1,3 +1,4 @@
+using System.Data;
 using System.Data.Common;
 using Dapper;
 using Domain.Models;
@@ -7,14 +8,14 @@ namespace Infrastructure.Repositories;
 
 public class MenuRepository: IMenuRepository
 {
-    private readonly DbConnection _connection;
+    private readonly IDbConnection _connection;
 
-    public MenuRepository(DbConnection connection)
+    public MenuRepository(IDbConnection connection)
     {
         _connection = connection;
     }
 
-    public async Task<List<Menu>> ListarMenuAsync()
+    public async Task<List<Menu>> BuscarMenuAsync()
     {
         try
         {
@@ -25,6 +26,43 @@ public class MenuRepository: IMenuRepository
         catch (Exception e)
         {
             throw new Exception(e.Message);
+        }
+    }
+
+    public async Task<int> TotalMenuAsync()
+    {
+        try
+        {
+            string sql = "SELECT COUNT(*) FROM MENU";
+            int totalMenu = await _connection.ExecuteAsync(sql);
+            return totalMenu;
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
+
+    public async Task<List<Menu>> BuscarMenuPaginadoAsync(int pagina, int quantidade)
+    {
+        try
+        {
+            string sql = "SELECT * FROM Menu ORDER BY ID OFFSET @OFFSET ROWS FETCH NEXT @QUANTIDADE ROWS ONLY";
+
+            var parameters = new
+            {
+                OFFSET = (pagina - 1) * quantidade,
+                QUANTIDADE = quantidade
+            };
+
+            var result =  await _connection.QueryAsync<Menu>(sql, parameters);
+
+            return result.ToList();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
         }
     }
 
@@ -43,7 +81,7 @@ public class MenuRepository: IMenuRepository
         }
     }
 
-    public async Task<bool> CriarMenuAsync(Menu menu)
+    public async Task<bool> AdicionarMenuAsync(Menu menu)
     {
         try
         {
@@ -55,7 +93,7 @@ public class MenuRepository: IMenuRepository
                 Url = menu.Url,
                 Icone = menu.Icone,
                 Ordem = menu.Ordem,
-                MenuPaiId = menu.MenuPaiId
+                MenuPaiId = menu.MenuPaiId == 0 ? null : (int?)menu.MenuPaiId
             };
             
             var result = await _connection.ExecuteAsync(sql, parametros);
@@ -67,20 +105,20 @@ public class MenuRepository: IMenuRepository
         }
     }
 
-    public async Task<bool> AtualizarMenuAsync(Menu menu)
+    public async Task<bool> AtualizarMenuAsync(int id, Menu menu)
     {
         try
         {
             string sql = @"UPDATE MENU SET Titulo = @Titulo, Descricao = @Descricao, Url = @Url, Icone = @Icone, Ordem = @Ordem, MenuPaiId = @MenuPaiId WHERE Id = @Id";
             var parametros = new
             {
-                Id = menu.Id,
+                Id = id,
                 Titulo = menu.Titulo,
                 Descricao = menu.Descricao,
                 Url = menu.Url,
                 Icone = menu.Icone,
                 Ordem = menu.Ordem,
-                MenuPaiId = menu.MenuPaiId
+                MenuPaiId = menu.MenuPaiId == 0 ? null : (int?)menu.MenuPaiId
             };
             
             var result = await _connection.ExecuteAsync(sql, parametros);
