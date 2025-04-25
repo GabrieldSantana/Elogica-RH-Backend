@@ -20,7 +20,11 @@ namespace Application.Services
             {
                 if (cargosSetores.CargosId <= 0 || cargosSetores.SetoresId <= 0)
                 {
-                    throw new Exception("Id deve ser positivo e maior que zero");
+                    throw new Exception("o cargosId deve ser positivo e maior que zero!");
+                }
+                if( cargosSetores.SetoresId <= 0)
+                {
+                    throw new Exception("o SetoresId deve ser positivo e maior que zero!");
                 }
 
                 var adicionarCargosSetores = await _cargosSetoresRepository.AdicionarCargosSetoresAsync(cargosSetores);
