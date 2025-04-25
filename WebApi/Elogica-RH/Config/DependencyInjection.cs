@@ -9,7 +9,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection DependencInjection(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
+        services.AddScoped<IFuncionarioService, FuncionarioService>();
+        
         services.AddScoped<INotificador, Notificador>();
+        
         services.AddScoped<IHorariosRepository, HorariosRepository>();
         services.AddScoped<IHorariosService, HorariosService>();
 
