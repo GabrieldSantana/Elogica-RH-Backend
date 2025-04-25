@@ -5,7 +5,7 @@ using Infrastructure.Repositories;
 
 namespace Elogica_RH.Config;
 
-public static class DependencyInjection
+public class DependencyInjection
 {
     public static IServiceCollection DependencInjection(this IServiceCollection services, IConfiguration configuration)
     {

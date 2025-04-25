@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Services;
 using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,8 +11,9 @@ public class CargosController : MainController
 {
     private readonly ICargosServices _service;
 
-    public CargosController(INotificador notificador, ICargosServices _service) : base(notificador)
+    public CargosController(INotificador notificador, ICargosServices service) : base(notificador)
     {
+        _service = service;
     }
 
     [HttpGet("pagina/{pagina}/{quantidade}")]
@@ -79,7 +81,7 @@ public class CargosController : MainController
     {
         try
         {
-            var resultado = await _service.AtualizarCargosAsync(cargosDto);
+            var resultado = await _service.AtualizarCargosAsync(id, cargosDto);
             return CustomResponse(resultado);
         }
         catch (Exception ex)
