@@ -1,8 +1,13 @@
 ﻿using AutoMapper;
+using Domain.Dtos;
+using Domain.Models;
 
 namespace Elogica_RH.Config;
 
 public class AutoMapper : Profile
 {
-
+    public AutoMapper()
+    {
+        CreateMap<HorariosDto, Horarios>();
+    }
 }
