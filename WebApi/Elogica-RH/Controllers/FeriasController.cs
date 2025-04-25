@@ -95,6 +95,7 @@ namespace WebApi.Controllers
                 return CustomResponse();
             }
 
+
         }
 
 
@@ -102,8 +103,8 @@ namespace WebApi.Controllers
         public async Task<IActionResult> AtualizarFeriasAsync(int id, [FromBody] FeriasDto dto)
         {
             try
-            {
-                await _feriasService.AtualizarFeriasAsync(id, dto);
+        {
+            await _feriasService.AtualizarFeriasAsync(id, dto);
                 return CustomResponse();
             }
             catch (ValidationException ex)
@@ -119,7 +120,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                await _feriasService.ExcluirFeriasAsync(id);
+            await _feriasService.ExcluirFeriasAsync(id);
                 return CustomResponse();
             }
             catch (ValidationException ex)
@@ -129,5 +130,6 @@ namespace WebApi.Controllers
             }
 
         }
+
     }
 }

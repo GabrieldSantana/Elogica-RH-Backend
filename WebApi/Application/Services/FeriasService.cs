@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Domain.Models;
 using Application.Interfaces;
 using AutoMapper;
+using Domain;
 using Infrastructure.Interfaces;
 using Domain.Dtos;
 
@@ -28,14 +29,14 @@ namespace Application.Services
                 if (pagina < 1 || quantidade < 1)
                     throw new ValidationException("Página e quantidade devem ser maiores que zero.");
 
-                var resultado = await _feriasRepository.BuscarFeriasPaginadoAsync(pagina, quantidade);
+            var resultado = await _feriasRepository.BuscarFeriasPaginadoAsync(pagina, quantidade);
 
                 return new RetornoPaginado<Ferias>
-                {
-                    TotalRegistro = resultado.TotalRegistro,
+            {
+                TotalRegistro = resultado.TotalRegistro,
                     Registros = resultado.Registros
-                };
-            }
+            };
+        }
             catch (Exception)
             {
                 throw new Exception("Não foi possível realizar retorno paginado");
@@ -45,9 +46,9 @@ namespace Application.Services
         {
             try
             {
-                var ferias = await _feriasRepository.BuscarFeriasAsync();
-                return _mapper.Map<IEnumerable<Ferias>>(ferias);
-            }
+            var ferias = await _feriasRepository.BuscarFeriasAsync();
+            return _mapper.Map<IEnumerable<Ferias>>(ferias);
+        }
             catch (Exception)
             {
                 throw new Exception("Não foi possível realizar a busca de férias");
@@ -57,11 +58,11 @@ namespace Application.Services
         {
             try
             {
-                var ferias = await _feriasRepository.BuscarFeriasPorIdAsync(id);
-                return _mapper.Map<Ferias>(ferias);
-            }
+            var ferias = await _feriasRepository.BuscarFeriasPorIdAsync(id);
+            return _mapper.Map<Ferias>(ferias);
+        }
             catch (Exception)
-            {
+        {
                 throw new Exception("Não foi possível realizar a busca de por ID");
             }
         }
@@ -100,7 +101,8 @@ namespace Application.Services
 
                 if (funcionario == null)
                 {
-                    throw new ValidationException($"Funcionário com ID {ferias.FuncionarioId} não encontrado no banco de dados");
+
+                        throw new ValidationException($"Funcionário com ID {ferias.FuncionarioId} não encontrado no banco de dados");
                 }
 
                 await ValidarRegrasFerias(ferias, funcionario);
@@ -122,47 +124,7 @@ namespace Application.Services
 
         private async Task ValidarRegrasFerias(Ferias ferias, Funcionario funcionario)
         {
-            // 1. Validação de datas
-            if (ferias.DataFim <= ferias.DataInicio)
-                throw new ValidationException("Data final deve ser maior que a data inicial.");
-
-            // 2. Antecedência mínima (1 mês)
-            if (ferias.DataInicio < DateTime.Now.AddMonths(1))
-                throw new ValidationException("Férias devem ser agendadas com 1 mês de antecedência.");
-
-            // 3. Tempo mínimo de empresa (1 ano)
-            if (funcionario.DataContratacao.AddYears(1) > DateTime.Now)
-                throw new ValidationException("Funcionário precisa ter pelo menos 1 ano de empresa.");
-
-            // 4. Conflito de períodos
-            if (await _feriasRepository.FuncionarioTemFerias(ferias.FuncionarioId, ferias.DataInicio, ferias.DataFim))
-                throw new ValidationException("Já existem férias cadastradas para este período.");
-
-            // 5. Verificar limite de dias e períodos
-            var feriasDoAno = await ObterFeriasDoFuncionarioNoAno(ferias.FuncionarioId, ferias.DataInicio.Year);
-            var diasSolicitados = (ferias.DataFim - ferias.DataInicio).Days + 1;
-
-            if (feriasDoAno.Count() >= 3)
-            {
-                throw new ValidationException("Limite máximo de 3 períodos de férias por ano já foi atingido");
-            }
-
-            var totalDias = feriasDoAno.Sum(f => (f.DataFim - f.DataInicio).Days + 1) + diasSolicitados;
-            if (totalDias > 30)
-            {
-                throw new ValidationException($"O total de dias de férias não pode exceder 30 dias por ano. Dias já agendados: {totalDias - diasSolicitados}");
-            }
-            var doisAnos = funcionario.DataContratacao.AddYears(2);
-            if (DateTime.Now >= doisAnos)
-            {
-                var feriasAntesDoisAnos = await ObterFeriasDoFuncionarioNoPeriodo(funcionario.Id, funcionario.DataContratacao, doisAnos);
-                var totalDiasAntesDoisAnos = feriasAntesDoisAnos.Sum(f => (f.DataFim - f.DataInicio).Days + 1);
-
-                if (totalDiasAntesDoisAnos < 30)
-                {
-                    throw new ValidationException("Funcionário deve tirar 30 dias de férias antes de completar 2 anos na empresa.");
-                }
-            }
+   
 
         }
 

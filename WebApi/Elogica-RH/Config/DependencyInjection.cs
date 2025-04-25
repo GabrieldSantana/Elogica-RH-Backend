@@ -2,8 +2,6 @@
 using Infrastructure.Repositories;
 using Application.Interfaces;
 using Application.Services;
-using AutoMapper;
-using Application;
 
 namespace Elogica_RH.Config;
 
@@ -48,6 +46,11 @@ public static class DependencyInjection
         #region Repositories
         services.AddScoped<ISetorRepository, SetorRepository>();
         #endregion
+        #endregion
+
+        #region Cargos Setores
+        services.AddScoped<ICargosSetoresService, CargosSetoresService>();
+        services.AddScoped<ICargosSetoresRepository, CargosSetoresRepository>();
         #endregion
 
         #region Notificador
