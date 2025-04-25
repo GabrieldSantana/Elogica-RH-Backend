@@ -1,3 +1,4 @@
+using Elogica_RH.Config;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -12,6 +13,10 @@ builder.Services.AddScoped<IDbConnection>(provider =>
     connection.Open();
     return connection;
 });
+
+builder.Services.DependencInjection(builder.Configuration);
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

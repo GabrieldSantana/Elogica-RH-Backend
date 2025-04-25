@@ -1,5 +1,27 @@
-﻿namespace Elogica_RH.Config;
+﻿using Application.Interfaces;
+using Application.Services;
+using Infrastructure.Interfaces;
+using Infrastructure.Repositories;
 
-public class DependencyInjection
+namespace Elogica_RH.Config;
+
+public static class DependencyInjection
 {
+    public static IServiceCollection DependencInjection(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
+        services.AddScoped<IFuncionarioService, FuncionarioService>();
+        services.AddScoped<INotificador, Notificador>();
+
+
+
+        #region Services
+        services.AddScoped<ISetorService, SetorService>();
+        #endregion
+
+        #region Repositories
+        services.AddScoped<ISetorRepository, SetorRepository>();
+        #endregion
+        return services;
+    }
 }

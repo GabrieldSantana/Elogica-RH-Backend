@@ -6,6 +6,7 @@ namespace Elogica_RH.Config;
 
 public class AutoMapper : Profile
 {
+
     #region MenuProfile
 
         public AutoMapper()
@@ -13,7 +14,11 @@ public class AutoMapper : Profile
             CreateMap<Menu, CriaMenuDto>().ReverseMap();
             CreateMap<Menu, AtualizaMenuDto>().ReverseMap();
             CreateMap<Menu, RespostaMenuDto>().ReverseMap();
+            
+            CreateMap<SetorDto, Setor>();
+            CreateMap<Setor, SetorDto>();
         }
 
     #endregion
+
 }
