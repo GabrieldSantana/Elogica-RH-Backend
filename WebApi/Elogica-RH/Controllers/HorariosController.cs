@@ -80,11 +80,11 @@ namespace Elogica_RH.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult> BuscarTodos()
+        public async Task<ActionResult> BuscarHorarios()
         {
             try
             {
-                var retorno = await _service.BuscarTodosHorariosAsync();
+                var retorno = await _service.BuscarHorariosAsync();
                 return CustomResponse(retorno);
             }
             catch (Exception ex)
