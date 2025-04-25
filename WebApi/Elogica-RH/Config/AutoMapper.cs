@@ -8,6 +8,8 @@ public class AutoMapper : Profile
 {
     public AutoMapper()
     {
+        CreateMap<Funcionario, FuncionarioDto>().ReverseMap();
+
         CreateMap<HorariosDto, Horarios>().ReverseMap();
         
         CreateMap<Setor, SetorDto>().ReverseMap();
