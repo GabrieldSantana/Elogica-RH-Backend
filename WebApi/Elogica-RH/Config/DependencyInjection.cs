@@ -11,7 +11,11 @@ public static class DependencyInjection
     {
         services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
         services.AddScoped<IFuncionarioService, FuncionarioService>();
+        
         services.AddScoped<INotificador, Notificador>();
+        
+        services.AddScoped<IHorariosRepository, HorariosRepository>();
+        services.AddScoped<IHorariosService, HorariosService>();
 
         #region Cargos
         #region Service

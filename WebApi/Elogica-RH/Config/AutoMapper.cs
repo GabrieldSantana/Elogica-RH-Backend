@@ -6,11 +6,12 @@ namespace Elogica_RH.Config;
 
 public class AutoMapper : Profile
 {
-
     public AutoMapper()
     {
-        CreateMap<SetorDto, Setor>();
-        CreateMap<Setor, SetorDto>();
+        CreateMap<HorariosDto, Horarios>().ReverseMap();
+        
+        CreateMap<Setor, SetorDto>().ReverseMap();
+        
         CreateMap<Cargos, CargosDto>().ReverseMap();
     }
 }
