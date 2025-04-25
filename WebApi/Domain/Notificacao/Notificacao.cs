@@ -1,4 +1,4 @@
-﻿namespace Domain.Main;
+﻿namespace Domain.Notificacao;
 public class Notificacao
 {
     public string Mensagem { get; }
