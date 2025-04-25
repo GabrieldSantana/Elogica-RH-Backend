@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces;
-using Domain.Main;
+using Domain.Notificacao;
 
 namespace Application.Services;
-internal class Notificador : INotificador
+public class Notificador : INotificador
 {
     private List<Notificacao> _notificacoes;
 
