@@ -19,7 +19,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
     {
         try
         {
-            var sqlInsert = @"insert into CargosSetores(CargosId, SetoresId) values(@cargoId, @SETORESID);";
+            var sqlInsert = @"insert into CargosSetores(CargosId, SetoresId) values(@cargosId, @SETORESID)";
 
             var paramentros = new
             {

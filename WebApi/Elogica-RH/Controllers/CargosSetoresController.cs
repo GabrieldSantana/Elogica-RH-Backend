@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 
 namespace Elogica_RH.Controllers;
 
@@ -31,7 +32,7 @@ public class CargosSetoresController : MainController
 
 
             var resultado = await _service.BuscarCargosSetoresAsync();
-            return CustomResponse(ModelState);
+            return CustomResponse(resultado);
         }
         catch (ValidationException ex)
         {
@@ -54,7 +55,7 @@ public class CargosSetoresController : MainController
             }
             var resultado = await _service.AdicionarCargosSetoresAsync(cargosSetores);
             
-                return CustomResponse(ModelState);
+                return CustomResponse(resultado);
             
 
         }
@@ -96,14 +97,29 @@ public class CargosSetoresController : MainController
     {
         try
         {
-            if (!ModelState.IsValid)
-            {
-
-            }
-            var AtualizarcargosSetores = await _service.AtualizarCargosSetoresAsync(cargosSetores);
-            return CustomResponse(ModelState);
+            
+            var retornoAtualizarCargosSetores = await _service.AtualizarCargosSetoresAsync(cargosSetores);
+            return CustomResponse(retornoAtualizarCargosSetores);
         }
         catch (ValidationException ex)
+        {
+
+            NotificarErro(ex.Message);
+            return CustomResponse();
+        }
+
+    }
+
+    [HttpGet("{quantidade}/{pagina}")]
+
+    public async Task<IActionResult> BuscarCargosSetoresPaginado(int quantidade, int pagina)
+    {
+        try
+        {
+            var retornoBuscarCargosSetoresPaginado = await _service.BuscarCargosSetoresPaginadoAsync(quantidade, pagina);
+            return CustomResponse(retornoBuscarCargosSetoresPaginado);
+        }
+        catch (Exception ex)
         {
 
             NotificarErro(ex.Message);
