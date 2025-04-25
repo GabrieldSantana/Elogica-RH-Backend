@@ -1,11 +1,10 @@
 ﻿using Application.Interfaces;
 using Domain.Dtos;
-using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elogica_RH.Controllers;
 
-[Route("api/[controller]")]
+[Route("setores")]
 [ApiController]
 public class SetorController : MainController
 {
@@ -61,8 +60,8 @@ public class SetorController : MainController
         }
     }
 
-    [HttpGet("paginado")]
-    public async Task<IActionResult> BuscarPaginadoAsync([FromQuery] int pagina = 1, [FromQuery] int quantidade = 10)
+    [HttpGet("{pagina}/{quantidade}")]
+    public async Task<IActionResult> BuscarPaginadoAsync( int pagina = 1, int quantidade = 10)
     {
         try
         {

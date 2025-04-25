@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Elogica_RH.Controllers
 {
-    [Route("api/horarios")]
+    [Route("horarios")]
     [ApiController]
     public class HorariosController : MainController
     {
@@ -94,8 +94,8 @@ namespace Elogica_RH.Controllers
             }
         }
 
-        [HttpGet("paginado")]
-        public async Task<ActionResult> BuscarPaginado([FromQuery] int pagina = 1, [FromQuery] int quantidade = 10)
+        [HttpGet("{pagina}/{quantidade}")]
+        public async Task<ActionResult> BuscarPaginado(int pagina = 1, int quantidade = 10)
         {
             try
             {
