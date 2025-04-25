@@ -1,3 +1,8 @@
+using Application.Interfaces;
+using Application.Services;
+using Elogica_RH.Config;
+using Infrastructure.Interfaces;
+using Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -13,6 +18,13 @@ builder.Services.AddScoped<IDbConnection>(provider =>
     return connection;
 });
 
+builder.Services.DependencInjection(builder.Configuration);
+
+builder.Services.AddScoped<ICargosRepository, CargosRepository>();
+builder.Services.AddScoped<ICargosServices, CargosService>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -27,6 +39,8 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod();
     });
 });
+
+
 
 var app = builder.Build();
 
