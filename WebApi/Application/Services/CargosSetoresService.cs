@@ -27,7 +27,7 @@ namespace Application.Services
 
                 return adicionarCargosSetores;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
