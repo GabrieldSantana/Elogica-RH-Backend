@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Elogica_RH.Controllers;
 
-[Route("api/[controller]")]
+[Route("cargos")]
 [ApiController]
 public class CargosController : MainController
 {
@@ -16,7 +16,7 @@ public class CargosController : MainController
         _service = service;
     }
 
-    [HttpGet("pagina/{pagina}/{quantidade}")]
+    [HttpGet("{pagina}/{quantidade}")]
     public async Task<IActionResult> BuscarCargosPaginadoAsync(int pagina, int quantidade)
     {
         try
