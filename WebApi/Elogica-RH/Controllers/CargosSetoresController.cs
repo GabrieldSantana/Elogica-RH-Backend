@@ -19,6 +19,7 @@ public class CargosSetoresController : MainController
         _notificador = notificador;
     }
 
+    #region Buscar CargosSetores
     [HttpGet]
 
     public async Task<IActionResult> BuscarCargosSetoresAsync()
@@ -34,14 +35,16 @@ public class CargosSetoresController : MainController
             var resultado = await _service.BuscarCargosSetoresAsync();
             return CustomResponse(resultado);
         }
-        catch (ValidationException ex)
+        catch (Exception ex)
         {
 
             NotificarErro(ex.Message);
             return CustomResponse();
         }
     }
+    #endregion
 
+    #region Adicionar CargosSetores
     [HttpPost]
 
     public async Task<IActionResult> AdicionarCargosSetoresAsync([FromBody] CargosSetores cargosSetores)
@@ -59,7 +62,7 @@ public class CargosSetoresController : MainController
             
 
         }
-        catch (ValidationException ex)
+        catch (Exception ex)
         {
 
             NotificarErro(ex.Message);
@@ -67,7 +70,9 @@ public class CargosSetoresController : MainController
         }
 
     }
+    #endregion
 
+    #region Excluir CargosSetores
     [HttpDelete("{id}")]
 
     public async Task<IActionResult> ExcluirCargosSetoresAsync(int id)
@@ -85,13 +90,16 @@ public class CargosSetoresController : MainController
 
 
         }
-        catch (ValidationException ex)
+        catch (Exception ex)
         {
 
             NotificarErro(ex.Message);
             return CustomResponse();
         }
     }
+    #endregion
+
+    #region Atualizar Cargos Setores
     [HttpPut]
     public async Task<IActionResult> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
     {
@@ -101,7 +109,7 @@ public class CargosSetoresController : MainController
             var retornoAtualizarCargosSetores = await _service.AtualizarCargosSetoresAsync(cargosSetores);
             return CustomResponse(retornoAtualizarCargosSetores);
         }
-        catch (ValidationException ex)
+        catch (Exception ex)
         {
 
             NotificarErro(ex.Message);
@@ -109,6 +117,9 @@ public class CargosSetoresController : MainController
         }
 
     }
+    #endregion
+
+    #region Buscar cargosSetores por pagina
 
     [HttpGet("{quantidade}/{pagina}")]
 
@@ -117,6 +128,7 @@ public class CargosSetoresController : MainController
         try
         {
             var retornoBuscarCargosSetoresPaginado = await _service.BuscarCargosSetoresPaginadoAsync(quantidade, pagina);
+
             return CustomResponse(retornoBuscarCargosSetoresPaginado);
         }
         catch (Exception ex)
@@ -127,4 +139,5 @@ public class CargosSetoresController : MainController
         }
 
     }
+    #endregion
 }

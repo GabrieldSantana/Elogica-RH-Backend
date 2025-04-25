@@ -73,8 +73,7 @@ namespace Application.Services
         {
             try
             {
-                
-
+             
                 var cargosSetoresRetornoPaginado = await _cargosSetoresRepository.BuscarCargosSetoresPaginadoAsync(quantidade, pagina);
                 return cargosSetoresRetornoPaginado;
             }

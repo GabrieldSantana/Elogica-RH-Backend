@@ -15,6 +15,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         _conn = conn;
     }
 
+    #region Adicionar CargosSetores
     public async Task<int> AdicionarCargosSetoresAsync(CargosSetores cargosSetores)
     {
         try
@@ -32,19 +33,23 @@ public class CargosSetoresRepository : ICargosSetoresRepository
             return resultado;
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
 
-            throw;
+            throw new Exception("erro ao adicionar CargosSetores");
         }
     }
+    #endregion
 
+    #region Atualizar CargosSetores
     //Voltar mais tarde 
     public Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetores)
     {
         throw new NotImplementedException();
     }
+    #endregion
 
+    #region Buscar cargosSetores
     public async Task<List<CargosSetores>> BuscarCargosSetoresAsync()
     {
         try
@@ -57,10 +62,12 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         catch (Exception)
         {
 
-            throw;
+            throw new Exception("Erro ao buscar CargosSetores");
         }
     }
+    #endregion
 
+    #region Buscar CargosSetores paginados
     public async Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int quantidade, int pagina)
     {
         try
@@ -80,25 +87,30 @@ public class CargosSetoresRepository : ICargosSetoresRepository
 
             var retornoPaginado = new RetornoPaginado<CargosSetores>
             {
-               TotalRegistro = retornoTotalCargosSetores,
-               Registros = cargosSetores.ToList()
+                TotalRegistro = retornoTotalCargosSetores,
+                Registros = cargosSetores.ToList()
             };
 
             return retornoPaginado;
-        
-         }
-            catch (Exception ex) { throw; }
-        }
-    
 
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Erro ao realizar busca paginada de CargosSetores");
+        }
+    }
+
+    #endregion
+
+    #region Excluir CargosSetores 
     public async Task<bool> ExcluirCargosSetoresAsync(int id)
     {
         try
         {
-            var sqlDelete = string.Format( "delete from CargosSetores where CargosId ={0} ", id);
+            var sqlDelete = string.Format("delete from CargosSetores where CargosId ={0} ", id);
 
 
-            
+
 
             var retorno = await _conn.ExecuteAsync(sqlDelete);
 
@@ -107,7 +119,8 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         catch (Exception)
         {
 
-            throw;
+            throw new Exception("Erro ao deleter cargosSetores");
         }
     }
+    #endregion
 }
