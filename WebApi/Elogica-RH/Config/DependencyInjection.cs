@@ -22,6 +22,14 @@ public static class DependencyInjection
         #endregion
         #endregion
 
+        #region Services
+        services.AddScoped<ISetorService, SetorService>();
+        #endregion
+
+        #region Repositories
+        services.AddScoped<ISetorRepository, SetorRepository>();
+        #endregion
+
         return services;
     }
 }
