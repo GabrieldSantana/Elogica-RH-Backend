@@ -1,26 +1,26 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elogica_RH.Controllers;
 
-[Route("setores")]
 [ApiController]
-public class SetorController : MainController
+[Route("api/[controller]")]
+public class MenuController: MainController
 {
-    private readonly ISetorService _setorService;
+    private readonly IMenuService _menuService;
 
-    public SetorController(ISetorService setorService, INotificador notificador) : base(notificador)
+    public MenuController(IMenuService menuService, INotificador notificador): base(notificador)
     {
-        _setorService = setorService;
+        _menuService = menuService;
     }
 
     [HttpPost]
-    public async Task<IActionResult> AdicionarSetorAsync([FromBody] SetorDto setorDto)
+    public async Task<IActionResult> AdicionarMenuAsync([FromBody] CriaMenuDto menuDto)
     {
         try
         {
-            var retorno = await _setorService.AdicionarSetoresAsync(setorDto);
+            var retorno = await _menuService.AdicionarMenuAsync(menuDto);
             return CustomResponse(retorno);
         }
         catch (Exception ex)
@@ -29,13 +29,28 @@ public class SetorController : MainController
             return CustomResponse();
         }
     }
-
+    
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarSetorAsync(int id, [FromBody] SetorDto setorDto)
+    public async Task<IActionResult> AtualizarMenuAsync(int id, [FromBody] AtualizaMenuDto menuDto)
     {
         try
         {
-            var retorno = await _setorService.AtualizarSetoresAsync(id, setorDto);
+            var retorno = await _menuService.AtualizarMenuAsync(id, menuDto);
+            return CustomResponse(retorno);
+        }
+        catch (Exception ex)
+        {
+            NotificarErro(ex.Message);
+            return CustomResponse();
+        }
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> BuscarMenuAsync()
+    {
+        try
+        {
+            var retorno = await _menuService.BuscarMenuAsync();
             return CustomResponse(retorno);
         }
         catch (Exception ex)
@@ -45,27 +60,12 @@ public class SetorController : MainController
         }
     }
 
-    [HttpGet]
-    public async Task<IActionResult> BuscarSetoresAsync()
+    [HttpGet("paginado")]
+    public async Task<IActionResult> BuscarMenuPaginadoAsync([FromQuery] int pagina = 1, [FromQuery] int quantidade = 10)
     {
         try
         {
-        var retorno = await _setorService.BuscarSetoresAsync();
-        return CustomResponse(retorno);
-        }
-        catch (Exception ex)
-        {
-            NotificarErro(ex.Message);
-            return CustomResponse();
-        }
-    }
-
-    [HttpGet("{pagina}/{quantidade}")]
-    public async Task<IActionResult> BuscarPaginadoAsync( int pagina = 1, int quantidade = 10)
-    {
-        try
-        {
-            var retorno = await _setorService.BuscarSetoresPaginadoAsync(pagina, quantidade);
+            var retorno = await _menuService.BuscarMenuPaginadoAsync(pagina, quantidade);
             return CustomResponse(retorno);
         }
         catch (Exception ex) 
@@ -76,12 +76,12 @@ public class SetorController : MainController
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> BuscarSetoresPorIdAsync(int id)
+    public async Task<IActionResult> BuscarMenuPorIdAsync(int id)
     {
         try
         {
-        var retorno = await _setorService.BuscarSetorPorIdAsync(id);
-        return CustomResponse(retorno);
+            var retorno = await _menuService.BuscaMenuPorIdAsync(id);
+            return CustomResponse(retorno);
         }
         catch (Exception ex)
         {
@@ -95,7 +95,7 @@ public class SetorController : MainController
     {
         try
         {
-            var retorno = await _setorService.ExcluirSetoresAsync(id);
+            var retorno = await _menuService.ExcluirMenuAsync(id);
             return CustomResponse(retorno);
         }
         catch(Exception ex)

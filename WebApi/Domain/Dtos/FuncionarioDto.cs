@@ -16,7 +16,6 @@ public class FuncionarioDto
     public DateTime DataNascimento { get; set; }
 
     [Required(ErrorMessage = "O E-mail é obrigatório.")]
-    [EmailAddress(ErrorMessage = "Formato de E-mail inválido.")]
     [MaxLength(50, ErrorMessage = "O E-mail só pode possuir no máximo 50 caracteres.")]
     public string Email { get; set; }
 

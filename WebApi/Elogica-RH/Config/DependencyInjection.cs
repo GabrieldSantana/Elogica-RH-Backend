@@ -1,7 +1,4 @@
 ﻿
-
-
-
 using Application.Interfaces;
 using Application.Services;
 using Infrastructure.Interfaces;
@@ -12,9 +9,15 @@ namespace Elogica_RH.Config;
 public static class DependencyInjection
 {
     public static IServiceCollection DependencInjection(this IServiceCollection services, IConfiguration configuration)
-    {
+    {   
+        services.AddScoped<IMenuRepository, MenuRepository>();
+        services.AddScoped<IMenuService, MenuService>();
+
+        services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
+        services.AddScoped<IFuncionarioService, FuncionarioService>();
         
-        services.AddScoped<INotificador, Notificador>();
+        services.AddScoped<IHorariosRepository, HorariosRepository>();
+        services.AddScoped<IHorariosService, HorariosService>();
 
         #region Cargos
         #region Service
@@ -44,6 +47,8 @@ public static class DependencyInjection
             #endregion
         #endregion
 
+        services.AddScoped<INotificador, Notificador>();
+        
         return services;
     }
 }

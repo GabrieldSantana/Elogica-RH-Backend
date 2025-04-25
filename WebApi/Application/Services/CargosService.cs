@@ -114,20 +114,12 @@ namespace Application.Services
             }
         }
 
-        public async Task<IEnumerable<CargosDto>> BuscarCargosAsync()
+        public async Task<IEnumerable<Cargos>> BuscarCargosAsync()
         {
             try
             {
                 var cargos = await _repository.BuscarCargosAsync();
-                var cargosDto = cargos.Select(c => new CargosDto
-                {
-                    Titulo = c.Titulo,
-                    Descricao = c.Descricao,
-                    SalarioBase = c.SalarioBase
-                });
-
-
-                return cargosDto;
+                return cargos;
             }
             catch (Exception)
             {

@@ -48,6 +48,26 @@ O backend é o núcleo do sistema de RH, permitindo:
    ```
    A API estará disponível em `https://localhost:5001` (ou na porta especificada no `appsettings.json`).
 
+## Configurando o appsettings.json
+O arquivo `appsettings.json` contém configurações, incluindo a string de conexão com o SQL Server. Exemplo:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=HRSystemDB;User Id=sa;Password=SuaSenhaForte;TrustServerCertificate=True;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning"
+    }
+  }
+}
+```
+
+- Substitua `Server`, `Database`, `User Id` e `Password` pelas credenciais do seu SQL Server.
+- Certifique-se de que `TrustServerCertificate=True` se estiver usando um certificado local ou autoassinado.
+
 ## Como Usar
 1. **Acessar a API**:
    - Use uma ferramenta como Postman ou cURL para interagir com a API.
@@ -86,39 +106,35 @@ O backend utiliza um banco de dados SQL Server com o seguinte esquema (conforme 
   - Itens de menu filho exigem `Url` e `MenuPaiId`.
   - `Ordem` deve ser único dentro do mesmo grupo de menu.
 
-## Configurando o appsettings.json
-O arquivo `appsettings.json` contém configurações, incluindo a string de conexão com o SQL Server. Exemplo:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=HRSystemDB;User Id=sa;Password=SuaSenhaForte;TrustServerCertificate=True;"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft": "Warning"
-    }
-  }
-}
-```
-
-- Substitua `Server`, `Database`, `User Id` e `Password` pelas credenciais do seu SQL Server.
-- Certifique-se de que `TrustServerCertificate=True` se estiver usando um certificado local ou autoassinado.
-
 ## Autenticação
 Atualmente, o backend não implementa autenticação. Todos os endpoints são acessíveis publicamente. Para uso em produção, considere adicionar autenticação baseada em JWT ou integrar com um provedor de identidade.
 
 ## Padrão de Nomenclatura de Métodos
-- **Métodos de Controladores, Serviços e Repositórios**:
-  Exemplos:
+
+- **Métodos de Controladores, Serviços e Repositórios** (Exemplos):
+
 - `BuscarFuncionarioAsync`,
 - `BuscarFuncionarioPorIdAsync`,
 - `BuscarFuncionarioPaginadoAsync`,
 - `AdicionarFuncionarioAsync`,
 - `AtualizarFuncionarioAsync`,
-- `ExcluirFuncionarioAsync`,
+
+- `ExcluirFuncionarioAsync`
+
 
 ## Padrão de Commits
 Os commits seguem a especificação **Conventional Commits**:
-...
+- Formato: `<tipo>: <descrição>`
+- Exemplo: `feat: adicionar método paginação de funcionários`
+- Tipos: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`.
+
+## Colaboradores
+Agradecemos aos seguintes colaboradores pelo seu empenho e trabalho neste projeto:
+- [Clara Oliveira](https://github.com/mclaraoliveira).
+- [Conrado Capistrano](https://github.com/ConradoCapistrano).
+- [Davisson Falcão](https://github.com/DavissonJr).
+- [Elton Luiz](https://github.com/eltonluiz178).
+- [Gabriel de Santana](https://github.com/gabrieldsantana).
+- [Lucas Serafim](https://github.com/LucasSerafim147).
+- [Thiago Felipe](https://github.com/thiagotfsilva).
+- [Vanessa Rodrigues](https://github.com/Vanvrs).
