@@ -1,18 +1,39 @@
-﻿using Application.Interfaces;
-using Application.Services;
-using Infrastructure.Interfaces;
+﻿using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
+using Application.Interfaces;
+using Application.Services;
+using AutoMapper;
+using Application;
 
-namespace Elogica_RH.Config;
-
-public static class DependencyInjection
+namespace Infrastructure.Config
 {
-    public static IServiceCollection DependencInjection(this IServiceCollection services, IConfiguration configuration)
+    public static class DependencyInjection
     {
-        services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
-        services.AddScoped<IFuncionarioService, FuncionarioService>();
-        services.AddScoped<INotificador, Notificador>();
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AutoMapperConfig());
+            });
 
-        return services;
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+
+
+            #region Ferias
+
+            //Registro dos serviços
+            services.AddScoped<IFeriasService, FeriasService>();
+
+
+            //Registro dos repositórios
+            services.AddScoped<IFeriasRepository, FeriasRepository>();
+            services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
+            #endregion
+
+            return services;
+        }
     }
 }

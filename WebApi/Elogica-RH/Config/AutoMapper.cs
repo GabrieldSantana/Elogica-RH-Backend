@@ -1,8 +1,15 @@
 ﻿using AutoMapper;
+using Domain.Dtos;
 
-namespace Elogica_RH.Config;
-
-public class AutoMapper : Profile
+namespace Application
 {
+    public class AutoMapperConfig : Profile
+    {
+        public AutoMapperConfig()
+        {
+            CreateMap<Ferias, FeriasDto>().ReverseMap();
 
+            
+        }
+    }
 }
