@@ -26,8 +26,8 @@ public static class DependencyInjection
         #endregion
 
         #region Ferias
-        services.AddScoped<IFeriasRepository, FeriasRepository>();
-        services.AddScoped<IFeriasService, FeriasService>();
+        //services.AddScoped<IFeriasRepository, FeriasRepository>();
+        //services.AddScoped<IFeriasService, FeriasService>();
         #endregion
 
         #region Cargos
