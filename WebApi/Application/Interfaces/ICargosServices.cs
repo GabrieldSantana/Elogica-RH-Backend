@@ -9,7 +9,7 @@ namespace Application.Interfaces
         Task<IEnumerable<CargosDto>> BuscarCargosAsync();
         Task<Cargos> BuscarCargosPorIdAsync(int id);
         Task<int> AdicionarCargosAsync(CargosDto cargosDto);
-        Task<bool> AtualizarCargosAsync(AtualizarCargosDto cargosDto);
+        Task<bool> AtualizarCargosAsync(int id, AtualizarCargosDto cargosDto);
         Task<bool> ExcluirCargosAsync(int id);
     }
 }
