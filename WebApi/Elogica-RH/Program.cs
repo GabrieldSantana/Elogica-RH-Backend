@@ -20,12 +20,16 @@ builder.Services.AddScoped<IDbConnection>(provider =>
 
 builder.Services.DependencInjection(builder.Configuration);
 
+builder.Services.AddScoped<ICargosRepository, CargosRepository>();
+builder.Services.AddScoped<ICargosServices, CargosService>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 builder.Services.AddCors(options =>
 {
@@ -37,6 +41,8 @@ builder.Services.AddCors(options =>
     });
 });
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,7 +51,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-    
+
+app.UseCors("AllowAngularApp");
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

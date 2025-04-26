@@ -5,22 +5,20 @@ namespace Elogica_RH.Config;
 
 public class AutoMapper : Profile
 {
+    public AutoMapper()
+    {
+        CreateMap<Funcionario, FuncionarioDto>().ReverseMap();
 
-    #region MenuProfile
+        CreateMap<Menu, CriaMenuDto>().ReverseMap();
+        CreateMap<Menu, AtualizaMenuDto>().ReverseMap();
+        CreateMap<Menu, RespostaMenuDto>().ReverseMap();
 
-        public AutoMapper()
-        {
-            CreateMap<Menu, CriaMenuDto>().ReverseMap();
-            CreateMap<Menu, AtualizaMenuDto>().ReverseMap();
-            CreateMap<Menu, RespostaMenuDto>().ReverseMap();
-            
-            CreateMap<HorariosDto, Horarios>().ReverseMap();
+        CreateMap<HorariosDto, Horarios>().ReverseMap();
+
+        CreateMap<Setor, SetorDto>().ReverseMap();
+
+        CreateMap<Cargos, CargosDto>().ReverseMap();
         
-            CreateMap<Setor, SetorDto>().ReverseMap();
-        
-            CreateMap<Cargos, CargosDto>().ReverseMap();
-        }
-
-    #endregion
-
+        CreateMap<Ferias, FeriasDto>().ReverseMap();
+     }
 }

@@ -15,7 +15,6 @@ O backend é o núcleo do sistema de RH, permitindo:
 ## Tecnologias
 - **.NET Core**: Framework para construção da API REST.
 - **C#**: Linguagem de programação principal.
-- **Entity Framework Core**: ORM para operações com banco de dados.
 - **Dapper**: Micro-ORM leve para consultas SQL otimizadas.
 - **AutoMapper**: Biblioteca para mapeamento entre objetos (ex.: DTOs e entidades).
 - **SQL Server**: Banco de dados para armazenamento de dados de RH.
@@ -48,6 +47,26 @@ O backend é o núcleo do sistema de RH, permitindo:
    ```
    A API estará disponível em `https://localhost:5001` (ou na porta especificada no `appsettings.json`).
 
+## Configurando o appsettings.json
+O arquivo `appsettings.json` contém configurações, incluindo a string de conexão com o SQL Server. Exemplo:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=HRSystemDB;User Id=sa;Password=SuaSenhaForte;TrustServerCertificate=True;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning"
+    }
+  }
+}
+```
+
+- Substitua `Server`, `Database`, `User Id` e `Password` pelas credenciais do seu SQL Server.
+- Certifique-se de que `TrustServerCertificate=True` se estiver usando um certificado local ou autoassinado.
+
 ## Como Usar
 1. **Acessar a API**:
    - Use uma ferramenta como Postman ou cURL para interagir com a API.
@@ -55,7 +74,28 @@ O backend é o núcleo do sistema de RH, permitindo:
 
 2. **Exemplo de Requisição**:
    Para obter uma lista paginada de funcionários:
-...
+   ```bash
+   curl -X GET "https://localhost:5001/api/Funcionarios?page=1&pageSize=10" -H "accept: application/json"
+   ```
+   Resposta:
+   ```json
+   {
+     "data": [
+       {
+         "id": 1,
+         "nome": "Ana Clara Souza",
+         "cpf": "12345678901",
+         "dataNascimento": "1990-03-22",
+         "dataContratacao": "2015-04-10",
+         "ativo": true,
+         "cargosId": 2
+       }
+     ],
+     "total": 1,
+     "page": 1,
+     "pageSize": 10
+   }
+   ```
 
 ## Banco de Dados
 O backend utiliza um banco de dados SQL Server com o seguinte esquema (conforme mostrado no diagrama fornecido):
@@ -86,39 +126,75 @@ O backend utiliza um banco de dados SQL Server com o seguinte esquema (conforme 
   - Itens de menu filho exigem `Url` e `MenuPaiId`.
   - `Ordem` deve ser único dentro do mesmo grupo de menu.
 
-## Configurando o appsettings.json
-O arquivo `appsettings.json` contém configurações, incluindo a string de conexão com o SQL Server. Exemplo:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=HRSystemDB;User Id=sa;Password=SuaSenhaForte;TrustServerCertificate=True;"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft": "Warning"
-    }
-  }
-}
-```
-
-- Substitua `Server`, `Database`, `User Id` e `Password` pelas credenciais do seu SQL Server.
-- Certifique-se de que `TrustServerCertificate=True` se estiver usando um certificado local ou autoassinado.
-
 ## Autenticação
 Atualmente, o backend não implementa autenticação. Todos os endpoints são acessíveis publicamente. Para uso em produção, considere adicionar autenticação baseada em JWT ou integrar com um provedor de identidade.
 
+## Rotas Disponíveis
+| Método | Caminho                       | Descrição                          |
+|--------|-------------------------------|------------------------------------|
+| GET    | `/funcionarios`               | Obtém funcionários. |
+| GET    | `/funcionarios/{id}`          | Obtém funcionário baseado no id. |
+| GET    | `/funcionarios/{pagina}/{quantidade}`          | Obtém funcionários paginados. |
+| POST   | `/funcionarios`           | Cria um novo funcionário.          |
+| PUT    | `/funcionarios/{id}`      | Atualiza um funcionário.           |
+| PUT    | `/funcionarios/desativa/{id}`      | Desativar um funcionário.             |
+| GET    | `/cargos`               | Obtém cargos. |
+| GET    | `/cargos/{id}`          | Obtém cargo baseado no id. |
+| GET    | `/cargos/{pagina}/{quantidade}`          | Obtém cargos paginados. |
+| POST   | `/cargos`           | Cria um novo cargo.          |
+| PUT    | `/cargos/{id}`      | Atualiza um cargo.           |
+| DELETE | `/cargos/{id}`      | Deleta um cargo.             |
+| GET    | `/setores`               | Obtém setores. |
+| GET    | `/setores/{id}`          | Obtém setor baseado no id. |
+| GET    | `/setores/{pagina}/{quantidade}`          | Obtém setores paginados. |
+| POST   | `/setores`           | Cria um novo setor.          |
+| PUT    | `/setores/{id}`      | Atualiza um setor.           |
+| DELETE | `/setores/{id}`      | Deleta um setor.             |
+| GET    | `/cargossetores`               | Obtém cargos setores. |
+| GET    | `/cargossetores/{id}`          | Obtém cargo setor baseado no id. |
+| GET    | `/cargossetores/{pagina}/{quantidade}`          | Obtém cargos setores paginados. |
+| POST   | `/cargossetores`           | Cria um novo cargo setor.          |
+| PUT    | `/cargossetores/{id}`      | Atualiza um cargo setor.           |
+| DELETE | `/cargossetores/{id}`      | Deleta um cargo setor.             |
+| GET    | `/ferias`               | Obtém os ferias de trabalho dos funcionários. |
+| GET    | `/ferias/{id}`          | Obtém ferias de trabalho dos funcionários baseado no id. |
+| GET    | `/ferias/{pagina}/{quantidade}`          | Obtém ferias de trabalho dos funcionários baseado no id. |
+| POST   | `/ferias`           | Cria um novo ferias.          |
+| PUT    | `/horario/{id}`      | Atualiza um ferias.           |
+| DELETE | `/horario/{id}`      | Deleta um ferias.             |
+| GET    | `/horarios`               | Obtém os horários de trabalho dos funcionários. |
+| GET    | `/horarios/{id}`          | Obtém horário de trabalho dos funcionários baseado no id. |
+| GET    | `/horarios/{pagina}/{quantidade}`          | Obtém horário de trabalho dos funcionários baseado no id. |
+| POST   | `/horarios`           | Cria um novo horário.          |
+| PUT    | `/horario/{id}`      | Atualiza um horário.           |
+| DELETE | `/horario/{id}`      | Deleta um horário.             |
+
 ## Padrão de Nomenclatura de Métodos
-- **Métodos de Controladores, Serviços e Repositórios**:
-  Exemplos:
+
+- **Métodos de Controladores, Serviços e Repositórios** (Exemplos):
+
 - `BuscarFuncionarioAsync`,
 - `BuscarFuncionarioPorIdAsync`,
 - `BuscarFuncionarioPaginadoAsync`,
 - `AdicionarFuncionarioAsync`,
 - `AtualizarFuncionarioAsync`,
-- `ExcluirFuncionarioAsync`,
+
+- `ExcluirFuncionarioAsync`
+
 
 ## Padrão de Commits
 Os commits seguem a especificação **Conventional Commits**:
-...
+- Formato: `<tipo>: <descrição>`
+- Exemplo: `feat: adicionar método paginação de funcionários`
+- Tipos: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
+
+## Colaboradores
+Agradecemos aos seguintes colaboradores pelo seu empenho e trabalho neste projeto:
+- [Clara Oliveira](https://github.com/mclaraoliveira).
+- [Conrado Capistrano](https://github.com/ConradoCapistrano).
+- [Davisson Falcão](https://github.com/DavissonJr).
+- [Elton Luiz](https://github.com/eltonluiz178).
+- [Gabriel de Santana](https://github.com/gabrieldsantana).
+- [Lucas Serafim](https://github.com/LucasSerafim147).
+- [Thiago Felipe](https://github.com/thiagotfsilva).
+- [Vanessa Rodrigues](https://github.com/Vanvrs).

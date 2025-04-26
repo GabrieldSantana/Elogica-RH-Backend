@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
-using Domain;
 using Domain.Dtos;
 using Domain.Models;
 using Infrastructure.Interfaces;
