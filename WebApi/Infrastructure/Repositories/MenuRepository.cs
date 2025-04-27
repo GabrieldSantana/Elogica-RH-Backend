@@ -34,7 +34,7 @@ public class MenuRepository : IMenuRepository
         try
         {
             string sql = "SELECT COUNT(*) FROM MENU";
-            int totalMenu = await _connection.ExecuteAsync(sql);
+            int totalMenu = await _connection.QueryFirstOrDefaultAsync<int>(sql);
             return totalMenu;
         }
         catch (Exception e)
