@@ -1,10 +1,7 @@
 ﻿using System.Data;
 using Dapper;
-using Domain;
 using Domain.Models;
 using Infrastructure.Interfaces;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 
 
 namespace Infrastructure.Repositories
@@ -17,7 +14,6 @@ namespace Infrastructure.Repositories
         {
             _connection = connection;
         }
-
         public async Task<RetornoPaginado<Ferias>> BuscarFeriasPaginadoAsync(int pagina, int quantidade)
         {
             var offset = (pagina - 1) * quantidade;
@@ -46,18 +42,11 @@ namespace Infrastructure.Repositories
                 Registros = registros.ToList()
             };
         }
-
         public async Task<IEnumerable<Ferias>> BuscarFeriasAsync()
         {
-            var sql = @"
-            SELECT 
-                f.Id, f.DataInicio, f.DataFim, f.FuncionarioId
-            FROM Ferias f";
-
-            var retorno = await _connection.QueryAsync<Ferias>(sql);
-            return retorno;
+            var sql = "SELECT * FROM Ferias";
+            return await _connection.QueryAsync<Ferias>(sql);
         }
-
         public async Task<Ferias> BuscarFeriasPorIdAsync(int id)
         {
             var sql = @"
@@ -69,7 +58,6 @@ namespace Infrastructure.Repositories
             var retorno = await _connection.QueryFirstOrDefaultAsync<Ferias>(sql, new { Id = id });
             return retorno;
         }
-
         public async Task<Ferias> AdicionarFeriasAsync(Ferias ferias)
         {
             using (var transaction = _connection.BeginTransaction())
@@ -127,17 +115,13 @@ namespace Infrastructure.Repositories
             {
                 try
                 {
-                    //Verifica se a data final é maior que a inicial
-                    if (ferias.DataFim <= ferias.DataInicio)
-                        throw new Exception("Data final deve ser maior que data inicial");
-
                     var query = @"
-                    UPDATE Ferias 
-                    SET 
-                        DataInicio = @DataInicio, 
-                        DataFim = @DataFim, 
-                        FuncionarioId = @FuncionarioId
-                    WHERE Id = @Id";
+            UPDATE Ferias 
+            SET 
+                DataInicio = @DataInicio, 
+                DataFim = @DataFim, 
+                FuncionarioId = @FuncionarioId
+            WHERE Id = @Id";
 
                     await _connection.ExecuteAsync(query, new
                     {
@@ -149,14 +133,13 @@ namespace Infrastructure.Repositories
 
                     transaction.Commit();
                 }
-                catch (Exception)
+                catch
                 {
                     transaction.Rollback();
-                    throw new Exception("Não foi possível atualizar o ID informado");
+                    throw;
                 }
             }
         }
-
         public async Task ExcluirFeriasAsync(int id)
         {
             await _connection.ExecuteAsync(
@@ -185,5 +168,32 @@ namespace Infrastructure.Repositories
 
             return count > 0;
         }
+
+
+        public async Task<bool> FuncionarioTemFerias(int funcionarioId, DateTime dataInicio, DateTime dataFim, int? excludeFeriasId = null)
+        {
+            var query = @"
+            SELECT COUNT(*) 
+            FROM Ferias 
+            WHERE FuncionarioId = @FuncionarioId
+            AND Id != COALESCE(@ExcludeFeriasId, -1)
+            AND (
+             (@DataInicio BETWEEN DataInicio AND DataFim) OR
+             (@DataFim BETWEEN DataInicio AND DataFim) OR
+             (DataInicio BETWEEN @DataInicio AND @DataFim)
+             )";
+
+            var count = await _connection.ExecuteScalarAsync<int>(query, new
+            {
+                FuncionarioId = funcionarioId,
+                DataInicio = dataInicio,
+                DataFim = dataFim,
+                ExcludeFeriasId = excludeFeriasId
+            });
+
+            return count > 0;
+        }
     }
 }
+
+

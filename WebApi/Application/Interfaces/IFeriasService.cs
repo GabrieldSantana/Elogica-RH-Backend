@@ -9,7 +9,8 @@ namespace Application.Interfaces
         Task<RetornoPaginado<Ferias>> BuscarFeriasPaginadoAsync(int pagina, int quantidade);
         Task<Ferias> BuscarFeriasPorIdAsync(int id);
         Task<Ferias> AdicionarFeriasAsync(Ferias ferias);
-        Task AtualizarFeriasAsync(int id, FeriasDto dto);
-        Task ExcluirFeriasAsync(int id);
+        Task<Ferias> AtualizarFeriasAsync(int id, FeriasDto dto);
+        Task<(bool Success, string Message)> ExcluirFeriasAsync(int id);
+
     }
 }

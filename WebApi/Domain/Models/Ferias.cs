@@ -1,6 +1,4 @@
-﻿using Domain.Models;
-
-public class Ferias
+﻿public class Ferias
 {
     public int Id { get; set; }
     public DateTime DataInicio { get; set; }
