@@ -41,6 +41,14 @@ public class CargosSetoresService : ICargosSetoresService
             await _setorService.BuscarSetorPorIdAsync(cargosSetores.SetoresId);
 
             await _cargosServices.BuscarCargosPorIdAsync(cargosSetores.CargosId);
+           
+
+            var existeRelacionamento = await _cargosSetoresRepository.VerificarCargosSetores(cargosSetores);
+            if (existeRelacionamento)
+            {
+                throw new Exception($"O relacionamento entre Cargo ID {cargosSetores.CargosId} e Setor ID {cargosSetores.SetoresId} já existe na tabela CargosSetores.");
+            }
+
             var adicionarCargosSetores = await _cargosSetoresRepository.AdicionarCargosSetoresAsync(cargosSetores);
 
             return adicionarCargosSetores;
