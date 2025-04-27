@@ -19,6 +19,6 @@ public class AutoMapper : Profile
 
         CreateMap<Cargos, CargosDto>().ReverseMap();
         
-        //CreateMap<Ferias, FeriasDto>().ReverseMap();
-     }
+        CreateMap<Ferias, FeriasDto>().ReverseMap();
+    }
 }
