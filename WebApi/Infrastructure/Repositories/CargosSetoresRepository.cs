@@ -90,7 +90,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
     #endregion
 
     #region Buscar CargosSetores paginados
-    public async Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int quantidade, int pagina)
+    public async Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int pagina, int quantidade)
     {
         try
         {
@@ -159,11 +159,12 @@ public class CargosSetoresRepository : ICargosSetoresRepository
 
             var paramentros = new
             {
-                CARGOSID = cargosSetores.CargosId,
-                SETORESID = cargosSetores.SetoresId
+                 cargosSetores.CargosId,
+                 cargosSetores.SetoresId
             };
 
-            return await _conn.ExecuteAsync(sql, paramentros) > 0;
+            var retorno = await _conn.QuerySingleAsync<int>(sql, paramentros);
+            return retorno > 0;
 
         }
         catch (Exception)

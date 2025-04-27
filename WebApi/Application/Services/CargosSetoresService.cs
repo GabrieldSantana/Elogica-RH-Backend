@@ -160,6 +160,7 @@ public class CargosSetoresService : ICargosSetoresService
             {
                 throw new Exception($"O relacionamento entre Cargo ID {cargosSetores.CargosId} e Setor ID {cargosSetores.SetoresId} não existe na tabela CargosSetores.");
             }
+
             var resultado = await _cargosSetoresRepository.ExcluirCargosSetoresAsync(cargosSetores);
 
             return resultado;
