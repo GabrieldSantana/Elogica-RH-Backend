@@ -21,31 +21,44 @@ O backend é o núcleo do sistema de RH, permitindo:
 - **Swagger**: Documentação e testes da API.
 
 ## Instalação
+As instruções a seguir são destinadas a usuários do **Microsoft Visual Studio**. Certifique-se de que o Visual Studio está instalado com o ".NET Core" ou ".NET Desktop Development" habilitado.
+
 1. **Clonar o Repositório**:
-   ```bash
-   git clone https://github.com/GabrieldSantana/Elogica-RH-Backend.git
-   cd Elogica-RH-Backend
-   ```
-
-2. **Instalar Dependências**:
-   Certifique-se de ter o SDK do .NET instalado. Em seguida, restaure as dependências:
-   ```bash
-   dotnet restore
-   ```
-
-3. **Configurar o Banco de Dados**:
-   - Configure uma instância do SQL Server (local ou remota).
-   - Atualize a string de conexão no arquivo `appsettings.json` (veja a seção "Configurando o appsettings.json" abaixo).
-   - Execute as migrações para configurar o banco de dados:
-     ```bash
-     dotnet ef database update
+   - Abra o Visual Studio.
+   - No menu superior, vá em **File > Open > Project/Solution** ou use o atalho `Ctrl+Shift+O`.
+   - Navegue até a pasta onde você deseja clonar o repositório e crie uma nova pasta chamada `Elogica-RH-Backend`.
+   - Abra o **Team Explorer** (menu **View > Team Explorer** ou `Ctrl+\, Ctrl+M`).
+   - No Team Explorer, clique em **Clone Repository**, insira a URL do repositório:
      ```
+     https://github.com/GabrieldSantana/Elogica-RH-Backend.git
+     ```
+   - Escolha o caminho local (a pasta criada anteriormente) e clique em **Clone**.
 
-4. **Executar a Aplicação**:
-   ```bash
-   dotnet run --project Src/Application/Application.csproj
-   ```
-   A API estará disponível em `https://localhost:5001` (ou na porta especificada no `appsettings.json`).
+2. **Abrir o Projeto**:
+   - Após clonar, o Visual Studio detectará automaticamente os arquivos do projeto.
+   - No **Solution Explorer** (menu **View > Solution Explorer** ou `Ctrl+Alt+L`), localize o arquivo `WebApi.sln` na pasta `Elogica-RH-Backend` e clique duas vezes para abrir a solução.
+
+3. **Instalar Dependências**:
+   - No **Solution Explorer**, clique com o botão direito na solução (`Solution 'WebApi'`) e selecione **Restore NuGet Packages**.
+   - O Visual Studio restaurará automaticamente todas as dependências listadas nos arquivos `.csproj`. Certifique-se de que o Visual Studio está conectado à internet para baixar os pacotes NuGet.
+
+4. **Configurar o Banco de Dados**:
+   - **Passo 1: Configurar uma Instância do SQL Server**  
+     Configure uma instância do SQL Server (local ou remota). Você pode usar o SQL Server Management Studio (SSMS) ou outra ferramenta compatível para gerenciar o banco.
+
+   - **Passo 2: Executar o Script de Criação do Banco de Dados**  
+     No **Solution Explorer**, localize a pasta `db/` no projeto. Esta pasta contém o script `script_db.sql`, que inclui todos os comandos necessários para criar o banco de dados `ELOGICA_RH`, suas tabelas e inserir dados iniciais.  
+     - Abra o SSMS e conecte-se à sua instância do SQL Server.  
+     - Abra o arquivo [script_db.sql](db/script_db.sql) (clique aqui para acessar).  
+     - Execute o script no SSMS para criar e popular o banco de dados.
+
+   - **Passo 3: Atualizar a String de Conexão**  
+     No **Solution Explorer**, localize o arquivo `appsettings.json` no projeto `WebApi`. Clique duas vezes para abri-lo e atualize a string de conexão para apontar para o banco `ELOGICA_RH` (veja a seção "Configurando o appsettings.json" abaixo).
+
+5. **Executar a Aplicação**:
+   - No **Solution Explorer**, clique com o botão direito no projeto `WebApi` (em `Src/WebApi`) e selecione **Set as Startup Project**.
+   - Pressione `F5` ou clique no botão **Start** (com o ícone de play verde) na barra de ferramentas para executar a aplicação.
+   - A API estará disponível em `https://localhost:5001` (ou na porta especificada no `appsettings.json`).
 
 ## Configurando o appsettings.json
 O arquivo `appsettings.json` contém configurações, incluindo a string de conexão com o SQL Server. Exemplo:
@@ -73,32 +86,26 @@ O arquivo `appsettings.json` contém configurações, incluindo a string de cone
    - A documentação Swagger está disponível em `/swagger` quando a aplicação estiver rodando (por exemplo, `https://localhost:5001/swagger`).
 
 2. **Exemplo de Requisição**:
-   Para obter uma lista paginada de funcionários:
+   Para obter um cargo por id:
    ```bash
-   curl -X GET "https://localhost:5001/api/Funcionarios?page=1&pageSize=10" -H "accept: application/json"
+   GET "https://localhost:5001/api/cargos/2"
    ```
    Resposta:
    ```json
-   {
-     "data": [
-       {
-         "id": 1,
-         "nome": "Ana Clara Souza",
-         "cpf": "12345678901",
-         "dataNascimento": "1990-03-22",
-         "dataContratacao": "2015-04-10",
-         "ativo": true,
-         "cargosId": 2
-       }
-     ],
-     "total": 1,
-     "page": 1,
-     "pageSize": 10
-   }
+    {
+      "success": true,
+      "data": {
+        "id": 2,
+        "titulo": "Desenvolvedor Sênior",
+        "descricao": "Desenvolve sistemas complexos e lidera técnicamente a equipe",
+        "salarioBase": 8500,
+        "setores": []
+      }
+    }
    ```
 
 ## Banco de Dados
-O backend utiliza um banco de dados SQL Server com o seguinte esquema (conforme mostrado no diagrama fornecido):
+O backend utiliza um banco de dados SQL Server com o seguinte esquema:
 
 - **Funcionarios**: Armazena dados de funcionários (ID, Nome, CPF, DataNascimento, Email, Telefone, Endereco, DataContratacao, Salario, Ativo, CargosId).
 - **Cargos**: Armazena dados de cargos (ID, Titulo, Descricao, SalarioBase).
@@ -106,6 +113,9 @@ O backend utiliza um banco de dados SQL Server com o seguinte esquema (conforme 
 - **Ferias**: Armazena dados de férias (ID, DataInicio, DataFim, FuncionariosId).
 - **Horarios**: Armazena dados de horários (ID, HorarioInicio, HorarioFim, IntervaloInicio, IntervaloFim).
 - **Menu**: Armazena itens de menu para navegação (ID, Titulo, Descricao, Url, Icone, Ordem, MenuPaiId).
+- **CargosSetores**: Armazena ligação entre as chaves de Cargos e Setores (CargosId, SetoresId).
+  
+Para saber mais sobre o banco de dados, consulte a documentação [Documentacao_DB_Elogica_RH.pdf](db/Documentacao_DB_Elogica_RH.pdf) (clique aqui para acessar).
 
 ### Regras de Validação
 - **Funcionarios**:
@@ -156,15 +166,15 @@ Atualmente, o backend não implementa autenticação. Todos os endpoints são ac
 | POST   | `/cargossetores`           | Cria um novo cargo setor.          |
 | PUT    | `/cargossetores/{id}`      | Atualiza um cargo setor.           |
 | DELETE | `/cargossetores/{id}`      | Deleta um cargo setor.             |
-| GET    | `/ferias`               | Obtém os ferias de trabalho dos funcionários. |
-| GET    | `/ferias/{id}`          | Obtém ferias de trabalho dos funcionários baseado no id. |
-| GET    | `/ferias/{pagina}/{quantidade}`          | Obtém ferias de trabalho dos funcionários baseado no id. |
-| POST   | `/ferias`           | Cria um novo ferias.          |
-| PUT    | `/horario/{id}`      | Atualiza um ferias.           |
-| DELETE | `/horario/{id}`      | Deleta um ferias.             |
+| GET    | `/ferias`               | Obtém as férias de trabalho dos funcionários. |
+| GET    | `/ferias/{id}`          | Obtém férias de trabalho dos funcionários baseado no id. |
+| GET    | `/ferias/{pagina}/{quantidade}`          | Obtém férias paginados. |
+| POST   | `/ferias`           | Cria uma nova férias.          |
+| PUT    | `/horario/{id}`      | Atualiza uma férias.           |
+| DELETE | `/horario/{id}`      | Deleta uma férias.             |
 | GET    | `/horarios`               | Obtém os horários de trabalho dos funcionários. |
 | GET    | `/horarios/{id}`          | Obtém horário de trabalho dos funcionários baseado no id. |
-| GET    | `/horarios/{pagina}/{quantidade}`          | Obtém horário de trabalho dos funcionários baseado no id. |
+| GET    | `/horarios/{pagina}/{quantidade}`          | Obtém horário paginados. |
 | POST   | `/horarios`           | Cria um novo horário.          |
 | PUT    | `/horario/{id}`      | Atualiza um horário.           |
 | DELETE | `/horario/{id}`      | Deleta um horário.             |
