@@ -94,42 +94,35 @@ namespace WebApi.Controllers
                 NotificarErro(ex.Message);
                 return CustomResponse();
             }
-
-
         }
-
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarFeriasAsync(int id, [FromBody] FeriasDto dto)
+
+        public async Task<ActionResult> AtualizarFeriasAsync(int id, [FromBody] FeriasDto dto)
         {
-            try
-        {
-            await _feriasService.AtualizarFeriasAsync(id, dto);
-                return CustomResponse();
-            }
-            catch (ValidationException ex)
+            if (!ModelState.IsValid)
             {
-                NotificarErro(ex.Message);
+                NotificarErroModelInvalida(ModelState);
                 return CustomResponse();
             }
 
+            var feriasAtualizada = await _feriasService.AtualizarFeriasAsync(id, dto);
+            return CustomResponse(feriasAtualizada);
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> ExcluirFeriasAsync(int id)
         {
             try
             {
-            await _feriasService.ExcluirFeriasAsync(id);
-                return CustomResponse();
+                await _feriasService.ExcluirFeriasAsync(id);
+                return CustomResponse("Férias excluída com sucesso!");
             }
-            catch (ValidationException ex)
+            catch (Exception)
             {
-                NotificarErro(ex.Message);
-                return CustomResponse();
+                return CustomResponse("Não foi possível excluir férias");
             }
-
         }
-
     }
 }

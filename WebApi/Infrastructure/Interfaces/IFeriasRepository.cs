@@ -1,5 +1,4 @@
-﻿
-using Domain.Models;
+﻿using Domain.Models;
 
 
 namespace Infrastructure.Interfaces
@@ -12,6 +11,6 @@ namespace Infrastructure.Interfaces
         Task<Ferias> AdicionarFeriasAsync(Ferias ferias);
         Task AtualizarFeriasAsync(Ferias ferias);
         Task ExcluirFeriasAsync(int id);
-        Task<bool> FuncionarioTemFerias(int funcionarioId, DateTime dataInicio, DateTime dataFim);
+        Task<bool> FuncionarioTemFerias(int funcionarioId, DateTime dataInicio, DateTime dataFim, int? excludeFeriasId = null);
     }
 }
