@@ -10,6 +10,6 @@ namespace Application.Interfaces
         Task<int> AdicionarCargosSetoresAsync(CargosSetores cargosSetores);
         Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores);
 
-        Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int quantidade, int pagina);
+        Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int pagina, int quantidade);
     }
 }

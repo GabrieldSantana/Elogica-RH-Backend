@@ -116,7 +116,7 @@ public class CargosSetoresService : ICargosSetoresService
 
     #region Buscar CargosSetores por pagina
 
-    public async Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int quantidade, int pagina)
+    public async Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int pagina, int quantidade)
     {
         try
         {
@@ -129,7 +129,7 @@ public class CargosSetoresService : ICargosSetoresService
                 throw new ArgumentException("A quantidade de paginas deve ser positiva e maior que zero!");
             }
          
-            var cargosSetoresRetornoPaginado = await _cargosSetoresRepository.BuscarCargosSetoresPaginadoAsync(quantidade, pagina);
+            var cargosSetoresRetornoPaginado = await _cargosSetoresRepository.BuscarCargosSetoresPaginadoAsync(pagina, quantidade);
             return cargosSetoresRetornoPaginado;
         }
         catch (Exception)
