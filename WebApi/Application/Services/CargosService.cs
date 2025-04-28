@@ -20,7 +20,7 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<int> AdicionarCargosAsync(CargosDto cargosDto)
+        public async Task<bool> AdicionarCargosAsync(CargosDto cargosDto)
         {
             try
             {
