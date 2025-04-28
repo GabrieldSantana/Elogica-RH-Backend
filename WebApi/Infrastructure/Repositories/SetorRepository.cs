@@ -13,6 +13,8 @@ public class SetorRepository : ISetorRepository
         _connection = connection;
     }
 
+    #region POST
+
     public async Task<bool> AdicionarSetoresAsync(Setor setor)
     {
         try
@@ -34,6 +36,9 @@ public class SetorRepository : ISetorRepository
         }
     }
 
+    #endregion
+
+    #region PUT
     public async Task<bool> AtualizarSetoresAsync(Setor setor)
     {
         try
@@ -55,6 +60,9 @@ public class SetorRepository : ISetorRepository
         }
     }
 
+    #endregion
+
+    #region GETs
     public async Task<Setor> BuscarSetoresPorIdAsync(int id)
     {
         try
@@ -115,6 +123,10 @@ public class SetorRepository : ISetorRepository
         }
     }
 
+    #endregion
+
+    #region DELETE
+
     public async Task<bool> ExcluirSetoresAsync(int id)
     {
         try
@@ -129,4 +141,6 @@ public class SetorRepository : ISetorRepository
             throw;
         };
     }
+    #endregion
 }
+
