@@ -79,7 +79,7 @@ namespace WebApi.Controllers
                     return CustomResponse(ModelState);
                 }
 
-                var ferias = new Ferias
+                var ferias = new FeriasDto
                 {
                     DataInicio = feriasDto.DataInicio,
                     DataFim = feriasDto.DataFim,

@@ -44,7 +44,7 @@ namespace Application.Services
             }
             catch (Exception)
             {
-                throw new Exception("Não foi possível realizar retorno paginado");
+                throw new Exception("Não foi possível realizar retorno paginado.");
             }
         }
         public async Task<IEnumerable<Ferias>> BuscarFeriasAsync()
@@ -56,7 +56,7 @@ namespace Application.Services
             }
             catch (Exception)
             {
-                throw new Exception("Não foi possível realizar a busca de férias");
+                throw new Exception("Não foi possível realizar a busca de férias.");
             }
         }
         public async Task<Ferias> BuscarFeriasPorIdAsync(int id)
@@ -68,7 +68,7 @@ namespace Application.Services
             }
             catch (Exception)
             {
-                throw new Exception("Não foi possível realizar a busca de por ID");
+                throw new Exception("Não foi possível realizar a busca de por ID.");
             }
         }
 
@@ -83,14 +83,14 @@ namespace Application.Services
                 var feriasExistente = await _feriasRepository.BuscarFeriasPorIdAsync(id);
                 if (feriasExistente == null)
                 {
-                    _notificador.Handle(new Notificacao("Férias não encontradas"));
+                    _notificador.Handle(new Notificacao("Férias não encontradas."));
                     return null;
                 }
 
                 //Validações
                 if (ferias.DataFim <= ferias.DataInicio)
                 {
-                    _notificador.Handle(new Notificacao("Data final deve ser maior que a data inicial"));
+                    _notificador.Handle(new Notificacao("Data final deve ser maior que a data inicial."));
                     return null;
                 }
 
@@ -100,7 +100,7 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                _notificador.Handle(new Notificacao($"Erro ao atualizar férias: {ex.Message}"));
+                _notificador.Handle(new Notificacao($"Erro ao atualizar férias: {ex.Message}."));
                 return null;
             }
         }
@@ -112,118 +112,144 @@ namespace Application.Services
                 var feriasExistente = await BuscarFeriasPorIdAsync(id);
                 if (feriasExistente == null)
                 {
-                    return (false, $"Não foi possível encontrar férias com o ID {id}");
+                    return (false, $"Não foi possível encontrar férias com o ID {id}.");
                 }
 
                 await _feriasRepository.ExcluirFeriasAsync(id);
-                return (true, "Férias excluídas com sucesso");
+                return (true, "Férias excluídas com sucesso.");
             }
             catch (Exception ex)
             {
-                return (false, $"Falha ao excluir férias ID {id}: {ex.Message}");
+                return (false, $"Falha ao excluir férias ID {id}: {ex.Message}.");
             }
         }
-        public async Task<Ferias> AdicionarFeriasAsync(Ferias ferias)
+        public async Task<bool> AdicionarFeriasAsync(FeriasDto dto)
         {
             try
             {
-                var funcionario = await _funcionarioService.BuscarFuncionarioPorIdAsync(ferias.FuncionarioId);
+                var funcionario = await _funcionarioService.BuscarFuncionarioPorIdAsync(dto.FuncionarioId);
                 if (funcionario == null)
                 {
                     _notificador.Handle(new Notificacao("Funcionário não encontrado."));
-                    return null;
+                    return false;
+                }
+                var dataContratacao = funcionario.DataContratacao;
+                if (dataContratacao.AddYears(1) > DateTime.Now)
+                {
+                    throw new Exception("Funcionário precisa ter pelo menos 1 ano de empresa");
+                }
+
+                var ativo = funcionario.Ativo;
+
+                if (!ativo)
+                {
+                    throw new Exception("Funcionário está inativo.");
                 }
 
                 //Adicionando false para isEdicao e null para feriasId
-                await ValidarRegrasFerias(ferias, funcionario, false, null);
+                await ValidarRegrasFerias(dto, funcionario, false, null);
 
                 if (_notificador.TemNotificacao())
-                    return null;
+                    return false;
 
-                return await _feriasRepository.AdicionarFeriasAsync(ferias);
+                return await _feriasRepository.AdicionarFeriasAsync(dto);
             }
             catch (Exception ex)
             {
                 _notificador.Handle(new Notificacao($"Erro ao adicionar férias: {ex.Message}"));
-                return null;
+                return false;
             }
         }
-        private async Task ValidarRegrasFerias(Ferias ferias, Funcionario funcionario, bool isEdicao, int? feriasId)
+        private async Task ValidarRegrasFerias(FeriasDto ferias, Funcionario funcionario, bool isEdicao, int? feriasId)
         {
-            var diasSolicitados = (ferias.DataFim - ferias.DataInicio).Days + 1;
-            var ano = ferias.DataInicio.Year;
-
-            //Obter todas as férias do funcionário no ano
-            var feriasDoAno = (await _feriasRepository.BuscarFeriasAsync())
-                .Where(f => f.FuncionarioId == ferias.FuncionarioId && f.DataInicio.Year == ano)
-                .ToList();
-
-            //Remover o registro atual se for edição
-            if (isEdicao && feriasId.HasValue)
+            try
             {
-                feriasDoAno = feriasDoAno.Where(f => f.Id != feriasId.Value).ToList();
-            }
+                var diasSolicitados = (ferias.DataFim - ferias.DataInicio).Days + 1;
+                var ano = ferias.DataInicio.Year;
 
-            //Verificar conflitos de período primeiro
-            foreach (var periodoExistente in feriasDoAno)
-            {
-                if ((ferias.DataInicio >= periodoExistente.DataInicio && ferias.DataInicio <= periodoExistente.DataFim) ||
-                    (ferias.DataFim >= periodoExistente.DataInicio && ferias.DataFim <= periodoExistente.DataFim) ||
-                    (ferias.DataInicio <= periodoExistente.DataInicio && ferias.DataFim >= periodoExistente.DataFim))
-                {
-                    _notificador.Handle(new Notificacao($"Período de férias já agendado: {periodoExistente.DataInicio:dd/MM/yyyy} a {periodoExistente.DataFim:dd/MM/yyyy}"));
-                    return;
-                }
-            }
-
-            //Verificar limite de períodos (máximo 3)
-            if (feriasDoAno.Count >= 3)
-            {
-                _notificador.Handle(new Notificacao("Limite máximo de 3 períodos de férias por ano já foi atingido"));
-                return;
-            }
-
-            //Calcular total de dias corretamente
-            var totalDiasJaAgendados = feriasDoAno.Sum(f => (f.DataFim - f.DataInicio).Days + 1);
-
-            if (totalDiasJaAgendados >= 30)
-            {
-                _notificador.Handle(new Notificacao("Limite máximo de 30 dias de férias por ano já foi atingido"));
-                return;
-            }
-
-            if ((totalDiasJaAgendados + diasSolicitados) > 30)
-            {
-                _notificador.Handle(new Notificacao($"Esta solicitação de {diasSolicitados} dias excede o limite. Dias já utilizados: {totalDiasJaAgendados}. Dias disponíveis: {30 - totalDiasJaAgendados}"));
-                return;
-            }
-
-            //Verificação dos 2 anos
-            await ValidarPeriodoDoisAnos(funcionario, ferias, isEdicao, feriasId);
-        }
-
-        private async Task ValidarPeriodoDoisAnos(Funcionario funcionario, Ferias ferias, bool isEdicao, int? feriasId)
-        {
-            var doisAnos = funcionario.DataContratacao.AddYears(2);
-            if (DateTime.Now < doisAnos)
-            {
-                var feriasAntesDoisAnos = (await _feriasRepository.BuscarFeriasAsync())
-                    .Where(f => f.FuncionarioId == funcionario.Id &&
-                               f.DataFim <= doisAnos)
+                //Obter todas as férias do funcionário no ano
+                var feriasDoAno = (await _feriasRepository.BuscarFeriasAsync())
+                    .Where(f => f.FuncionarioId == ferias.FuncionarioId && f.DataInicio.Year == ano)
                     .ToList();
 
+                //Remover o registro atual se for edição
                 if (isEdicao && feriasId.HasValue)
                 {
-                    feriasAntesDoisAnos = feriasAntesDoisAnos.Where(f => f.Id != feriasId.Value).ToList();
+                    feriasDoAno = feriasDoAno.Where(f => f.Id != feriasId.Value).ToList();
                 }
 
-                var totalDiasAntesDoisAnos = feriasAntesDoisAnos.Sum(f => (f.DataFim - f.DataInicio).Days + 1);
-                var diasNecessarios = 30 - totalDiasAntesDoisAnos;
-
-                if (diasNecessarios > 0)
+                //Verificar conflitos de período primeiro
+                foreach (var periodoExistente in feriasDoAno)
                 {
-                    _notificador.Handle(new Notificacao($"O funcionário deve tirar {diasNecessarios} dias de férias antes de completar 2 anos na empresa"));
+                    if ((ferias.DataInicio >= periodoExistente.DataInicio && ferias.DataInicio <= periodoExistente.DataFim) ||
+                        (ferias.DataFim >= periodoExistente.DataInicio && ferias.DataFim <= periodoExistente.DataFim) ||
+                        (ferias.DataInicio <= periodoExistente.DataInicio && ferias.DataFim >= periodoExistente.DataFim))
+                    {
+                        _notificador.Handle(new Notificacao($"Período de férias já agendado: {periodoExistente.DataInicio:dd/MM/yyyy} a {periodoExistente.DataFim:dd/MM/yyyy}"));
+                        return;
+                    }
                 }
+
+                //Verificar limite de períodos (máximo 3)
+                if (feriasDoAno.Count >= 3)
+                {
+                    _notificador.Handle(new Notificacao("Limite máximo de 3 períodos de férias por ano já foi atingido"));
+                    return;
+                }
+
+                //Calcular total de dias corretamente
+                var totalDiasJaAgendados = feriasDoAno.Sum(f => (f.DataFim - f.DataInicio).Days + 1);
+
+                if (totalDiasJaAgendados >= 30)
+                {
+                    _notificador.Handle(new Notificacao("Limite máximo de 30 dias de férias por ano já foi atingido"));
+                    return;
+                }
+
+                if ((totalDiasJaAgendados + diasSolicitados) > 30)
+                {
+                    _notificador.Handle(new Notificacao($"Esta solicitação de {diasSolicitados} dias excede o limite. Dias já utilizados: {totalDiasJaAgendados}. Dias disponíveis: {30 - totalDiasJaAgendados}"));
+                    return;
+                }
+
+                //Verificação dos 2 anos
+                await ValidarPeriodoDoisAnos(funcionario, ferias, isEdicao, feriasId);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        private async Task ValidarPeriodoDoisAnos(Funcionario funcionario, FeriasDto ferias, bool isEdicao, int? feriasId)
+        {
+            try
+            {
+                var doisAnos = funcionario.DataContratacao.AddYears(2);
+                if (DateTime.Now < doisAnos)
+                {
+                    var feriasAntesDoisAnos = (await _feriasRepository.BuscarFeriasAsync())
+                        .Where(f => f.FuncionarioId == funcionario.Id &&
+                                   f.DataFim <= doisAnos)
+                        .ToList();
+
+                    if (isEdicao && feriasId.HasValue)
+                    {
+                        feriasAntesDoisAnos = feriasAntesDoisAnos.Where(f => f.Id != feriasId.Value).ToList();
+                    }
+
+                    var totalDiasAntesDoisAnos = feriasAntesDoisAnos.Sum(f => (f.DataFim - f.DataInicio).Days + 1);
+                    var diasNecessarios = 30 - totalDiasAntesDoisAnos;
+
+                    if (diasNecessarios > 0)
+                    {
+                        _notificador.Handle(new Notificacao($"O funcionário deve tirar {diasNecessarios} dias de férias antes de completar 2 anos na empresa"));
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }

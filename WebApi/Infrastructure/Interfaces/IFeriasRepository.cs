@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Models;
 
 
 namespace Infrastructure.Interfaces
@@ -8,9 +9,9 @@ namespace Infrastructure.Interfaces
         Task<IEnumerable<Ferias>> BuscarFeriasAsync();
         Task<RetornoPaginado<Ferias>> BuscarFeriasPaginadoAsync(int pagina, int quantidade);
         Task<Ferias> BuscarFeriasPorIdAsync(int id);
-        Task<Ferias> AdicionarFeriasAsync(Ferias ferias);
+        Task<bool> AdicionarFeriasAsync(FeriasDto dto);
         Task AtualizarFeriasAsync(Ferias ferias);
         Task ExcluirFeriasAsync(int id);
-        Task<bool> FuncionarioTemFerias(int funcionarioId, DateTime dataInicio, DateTime dataFim, int? excludeFeriasId = null);
+        
     }
 }
