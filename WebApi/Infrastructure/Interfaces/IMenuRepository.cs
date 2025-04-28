@@ -13,4 +13,3 @@ public interface IMenuRepository
     Task<bool> ExcluirMenuAsync(int idg);
 }
 
-
