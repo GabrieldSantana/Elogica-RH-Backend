@@ -13,6 +13,8 @@ public class SetorRepository : ISetorRepository
         _connection = connection;
     }
 
+    #region POST
+
     public async Task<bool> AdicionarSetoresAsync(Setor setor)
     {
         try
@@ -26,13 +28,17 @@ public class SetorRepository : ISetorRepository
             };
 
             var setoresCadastrados = await _connection.ExecuteAsync(sql, parametros);
-            return setoresCadastrados > 0 ? true : false;
+            return setoresCadastrados > 0;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw;
+            throw new Exception("Erro ao adicionar setor");
         }
     }
+
+    #endregion
+
+    #region PUT
 
     public async Task<bool> AtualizarSetoresAsync(Setor setor)
     {
@@ -47,25 +53,29 @@ public class SetorRepository : ISetorRepository
             };
 
             var resultado = await _connection.ExecuteAsync(sql, parametros);
-            return resultado > 0 ? true : false;
+            return resultado > 0;
         }
         catch (Exception)
         {
-            throw;
+            throw new Exception($"Erro ao atualizar setor com ID {setor.Id}");
         }
     }
+
+    #endregion
+
+    #region GETs
 
     public async Task<Setor> BuscarSetoresPorIdAsync(int id)
     {
         try
         {
-            string sql = $"SELECT * FROM Setores WHERE Id={id}";
+            string sql = $"SELECT * FROM Setores WHERE Id = {id}";
             var setor = await _connection.QueryFirstOrDefaultAsync<Setor>(sql);
             return setor;
         }
         catch (Exception)
         {
-            throw;
+            throw new Exception($"Erro ao buscar setor com ID {id}");
         }
     }
 
@@ -83,21 +93,20 @@ public class SetorRepository : ISetorRepository
 
             var setores = await _connection.QueryAsync<Setor>(sql, parametros);
 
-            var totalSetores = "SELECT COUNT(*) FROM Setores";
-
-            var retornoTotalSetores = await _connection.ExecuteScalarAsync<int>(totalSetores);
+            var totalSetoresSql = "SELECT COUNT(*) FROM Setores";
+            var totalSetores = await _connection.ExecuteScalarAsync<int>(totalSetoresSql);
 
             var retornoPaginado = new RetornoPaginado<Setor>
             {
-                TotalRegistro = retornoTotalSetores,
+                TotalRegistro = totalSetores,
                 Registros = setores.ToList()
             };
 
             return retornoPaginado;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new Exception($"Erro ao buscar setores paginados");
         }
     }
 
@@ -111,9 +120,13 @@ public class SetorRepository : ISetorRepository
         }
         catch (Exception)
         {
-            throw;
+            throw new Exception("Erro ao buscar setores");
         }
     }
+
+    #endregion
+
+    #region DELETE
 
     public async Task<bool> ExcluirSetoresAsync(int id)
     {
@@ -124,9 +137,11 @@ public class SetorRepository : ISetorRepository
             var result = await _connection.ExecuteAsync(sql, parameters);
             return result > 0;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
-        };
+            throw new Exception($"Erro ao excluir setor com ID {id}");
+        }
     }
+
+    #endregion
 }
