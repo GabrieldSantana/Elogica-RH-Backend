@@ -65,7 +65,7 @@ namespace Application.Services
                 if (horario.IntervaloInicio >= horario.IntervaloFim)
                     throw new ArgumentException("O início do intervalo precisa ser anterior ao fim.");
 
-                bool sucesso = await _repository.AdicionarHorarioAsync(horario);
+                bool sucesso = await _repository.AtualizarHorarioAsync(id, horario);
 
                 if (sucesso)
                 {
