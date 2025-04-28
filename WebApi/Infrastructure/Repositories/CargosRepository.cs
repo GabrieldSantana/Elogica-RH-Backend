@@ -14,7 +14,7 @@ namespace Infrastructure.Repositories
             _conn = conn;
         }
 
-        public async Task<int> AdicionarCargosAsync(Cargos cargos)
+        public async Task<bool> AdicionarCargosAsync(Cargos cargos)
         {
             try
             {
@@ -30,7 +30,8 @@ namespace Infrastructure.Repositories
                     SalarioBase = cargos.SalarioBase
                 };
 
-                return await _conn.ExecuteScalarAsync<int>(sql, parametros);
+                var resultado = await _conn.ExecuteAsync(sql, parametros);
+                return resultado > 0 ? true : false;
             }
             catch (Exception)
             {
