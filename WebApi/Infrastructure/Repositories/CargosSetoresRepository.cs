@@ -36,7 +36,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         catch (Exception ex)
         {
 
-            throw new Exception("erro ao adicionar CargosSetores");
+            throw new Exception("Erro ao adicionar CargosSetores!");
         }
     }
     #endregion
@@ -66,7 +66,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         catch (Exception)
         {
 
-            throw new ArgumentException("Erro ao atualizar CargosSetores");
+            throw new ArgumentException("Erro ao atualizar CargosSetores!");
         }
     }
     #endregion
@@ -84,7 +84,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         catch (Exception)
         {
 
-            throw new Exception("Erro ao buscar CargosSetores");
+            throw new Exception("Erro ao buscar CargosSetores!");
         }
     }
     #endregion
@@ -118,7 +118,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         }
         catch (Exception ex)
         {
-            throw new Exception("Erro ao realizar busca paginada de CargosSetores");
+            throw new Exception("Erro ao realizar busca paginada de CargosSetores!");
         }
     }
 
@@ -146,7 +146,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         catch (Exception)
         {
 
-            throw new Exception("Erro ao deleter cargosSetores");
+            throw new Exception("Erro ao excluir cargossetores!");
         }
     }
     #region Verificar Cargos Setores
@@ -170,7 +170,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         catch (Exception)
         {
 
-            throw new Exception("Erro ao verificar cargosSetores");
+            throw new Exception("Erro ao verificar cargosSetores!");
         }
     }
     #endregion
