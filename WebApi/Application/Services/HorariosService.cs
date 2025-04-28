@@ -14,6 +14,18 @@ namespace Application.Services
             _repository = repository;
         }
 
+        private async Task<bool> HorarioConflitanteExiste(HorariosDto horario, int? idExistente = null)
+        {
+            var todosHorarios = await _repository.BuscarHorariosAsync();
+
+            return todosHorarios.Any(h =>
+                h.Id != idExistente &&
+                h.HorarioInicio == horario.HorarioInicio &&
+                h.HorarioFim == horario.HorarioFim &&
+                h.IntervaloInicio == horario.IntervaloInicio &&
+                h.IntervaloFim == horario.IntervaloFim);
+        }
+
         public async Task<string> AtualizarHorarioAsync(int id, HorariosDto horario)
         {
             string retorno = "";
@@ -22,6 +34,9 @@ namespace Application.Services
                 var horarioExistente = await _repository.BuscarHorarioPorIdAsync(id);
                 if (horario == null)
                     throw new ArgumentException("Os dados do horário não podem ser nulos.");
+
+                if (await HorarioConflitanteExiste(horario, id))
+                    throw new ArgumentException("Já existe outro horário com esses mesmos valores.");
 
                 if (horario.HorarioInicio.Hour < 8 || horario.HorarioFim.Hour > 20)
                     throw new ArgumentException("Os horários devem estar entre 08:00 e 20:00.");
@@ -50,7 +65,7 @@ namespace Application.Services
                 if (horario.IntervaloInicio >= horario.IntervaloFim)
                     throw new ArgumentException("O início do intervalo precisa ser anterior ao fim.");
 
-                bool sucesso = await _repository.AdicionarHorarioAsync(horario);
+                bool sucesso = await _repository.AtualizarHorarioAsync(id, horario);
 
                 if (sucesso)
                 {
@@ -115,6 +130,9 @@ namespace Application.Services
             {
                 if (horario == null)
                     throw new ArgumentException("Os dados do horário não podem ser nulos.");
+
+                if (await HorarioConflitanteExiste(horario))
+                    throw new ArgumentException("Já existe um horário com esses mesmos valores.");
 
                 if (horario.HorarioInicio.Hour < 8 || horario.HorarioFim.Hour > 20)
                     throw new ArgumentException("Os horários devem estar entre 08:00 e 20:00.");
