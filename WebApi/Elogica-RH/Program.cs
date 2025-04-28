@@ -13,9 +13,10 @@ string? connectionString = builder.Configuration.GetConnectionString("DefaultCon
 
 builder.Services.AddScoped<IDbConnection>(provider =>
 {
-    SqlConnection connection = new SqlConnection(connectionString);
-    connection.Open();
-    return connection;
+    return new SqlConnection(connectionString);
+    //SqlConnection connection = new SqlConnection(connectionString);
+    //connection.Open();
+    //return connection;
 });
 
 builder.Services.DependencInjection(builder.Configuration);
