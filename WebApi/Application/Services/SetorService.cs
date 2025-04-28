@@ -43,22 +43,29 @@ namespace Application.Services
 
         public async Task<bool> AtualizarSetoresAsync(int id, SetorDto setorDto)
         {
+            if (id <= 0)
+                throw new ArgumentException("O ID informado é inválido.", nameof(id));
+
+            if (setorDto == null)
+                throw new ArgumentNullException(nameof(setorDto), "Os dados do setor não podem ser nulos.");
+
             try
             {
-            var setorExistente = await _setorRepository.BuscarSetoresPorIdAsync(id);
-            if (setorExistente == null)
-                return false;
+                var setorExistente = await _setorRepository.BuscarSetoresPorIdAsync(id);
+                if (setorExistente == null)
+                    return false;
 
-            var setor = _mapper.Map<Setor>(setorDto);
-            setor.Id = id;
+                var setor = _mapper.Map<Setor>(setorDto);
+                setor.Id = id;
 
-            return await _setorRepository.AtualizarSetoresAsync(setor);
+                return await _setorRepository.AtualizarSetoresAsync(setor);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
         }
+
 
 
         public async Task<IEnumerable<Setor>> BuscarSetoresAsync()
