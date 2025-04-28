@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Domain;
 using Domain.Dtos;
 using Domain.Models;
 using Infrastructure.Interfaces;
@@ -16,6 +15,7 @@ namespace Infrastructure.Repositories
             _connection = connection;
         }
 
+        #region Adicionar Horário
         public async Task<bool> AdicionarHorarioAsync(HorariosDto horario)
         {
             try
@@ -32,6 +32,9 @@ namespace Infrastructure.Repositories
             }
         }
 
+        #endregion
+
+        #region Atualizar Horário
         public async Task<bool> AtualizarHorarioAsync(int id, HorariosDto horario)
         {
             try
@@ -61,6 +64,9 @@ namespace Infrastructure.Repositories
             }
         }
 
+        #endregion
+
+        #region Excluir Horário
         public async Task<bool> ExcluirHorarioAsync(int id)
         {
             try
@@ -76,6 +82,9 @@ namespace Infrastructure.Repositories
             }
         }
 
+        #endregion
+
+        #region Buscar Horário por Id
         public async Task<Horarios> BuscarHorarioPorIdAsync(int id)
         {
             try
@@ -91,6 +100,9 @@ namespace Infrastructure.Repositories
             }
         }
 
+        #endregion
+
+        #region Buscar Horários
         public async Task<List<Horarios>> BuscarHorariosAsync()
         {
             try
@@ -106,6 +118,9 @@ namespace Infrastructure.Repositories
             }
         }
 
+        #endregion
+
+        #region Buscar Horário Paginado
         public async Task<RetornoPaginado<Horarios>> BuscarHorarioPaginadoAsync(int pagina, int quantidade)
         {
             try
@@ -134,5 +149,7 @@ namespace Infrastructure.Repositories
                 throw new Exception("Erro ao buscar horários paginados.");
             }
         }
+
+        #endregion
     }
 }

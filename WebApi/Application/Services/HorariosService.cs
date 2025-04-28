@@ -14,6 +14,7 @@ namespace Application.Services
             _repository = repository;
         }
 
+        #region Método para impedir adição de horários iguais
         private async Task<bool> HorarioConflitanteExiste(HorariosDto horario, int? idExistente = null)
         {
             var todosHorarios = await _repository.BuscarHorariosAsync();
@@ -25,7 +26,9 @@ namespace Application.Services
                 h.IntervaloInicio == horario.IntervaloInicio &&
                 h.IntervaloFim == horario.IntervaloFim);
         }
+        #endregion
 
+        #region Atualizar Horário
         public async Task<string> AtualizarHorarioAsync(int id, HorariosDto horario)
         {
             string retorno = "";
@@ -79,7 +82,9 @@ namespace Application.Services
                 throw;
             }
         }
+        #endregion
 
+        #region Buscar Horário Paginado
         public async Task<RetornoPaginado<Horarios>> BuscarHorarioPaginadoAsync(int pagina, int quantidade)
         {
             try
@@ -94,7 +99,9 @@ namespace Application.Services
                 throw;
             }
         }
+        #endregion
 
+        #region Buscar Horário por Id
         public async Task<Horarios> BuscarHorarioPorIdAsync(int id)
         {
             try
@@ -111,6 +118,9 @@ namespace Application.Services
             }
         }
 
+        #endregion
+
+        #region Buscar Horários
         public async Task<List<Horarios>> BuscarHorariosAsync()
         {
             try
@@ -122,7 +132,9 @@ namespace Application.Services
                 throw;
             }
         }
+        #endregion
 
+        #region AdicionarHorario
         public async Task<string> AdicionarHorarioAsync(HorariosDto horario)
         {
             string retorno = "";
@@ -175,7 +187,9 @@ namespace Application.Services
                 throw;
             }
         }
+        #endregion
 
+        #region Excluir Horário 
         public async Task<string> ExcluirHorarioAsync(int id)
         {
             string retorno = "";
@@ -199,5 +213,6 @@ namespace Application.Services
                 throw;
             }
         }
+        #endregion
     }
 }
