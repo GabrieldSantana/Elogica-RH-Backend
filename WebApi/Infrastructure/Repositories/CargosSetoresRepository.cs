@@ -176,5 +176,21 @@ public class CargosSetoresRepository : ICargosSetoresRepository
     #endregion
     #endregion
 
+    #region Inner Join Cargos Setores
+    public async Task<List<InnerCargoSetor>> ListarInnerCargoSetores()
+    {
+        try
+        {
+            var sqlSelect = @"SELECT C.Id AS IdCargo, S.Id AS IdSetor, S.Nome AS SetorNome, S.Descricao As SetorDescricao FROM Cargos C INNER JOIN CargosSetoreS CS ON c.Id = cs.CargosId INNER JOIN Setores S ON CS.SetoresId = S.Id;";
+
+            var resultado = await _conn.QueryAsync<InnerCargoSetor>(sqlSelect);
+            return resultado.ToList();
+        }
+        catch (Exception)
+        {
+            throw new Exception("Erro ao buscar Inner cargosSetores");
+        }
+    }
+    #endregion
 
 }

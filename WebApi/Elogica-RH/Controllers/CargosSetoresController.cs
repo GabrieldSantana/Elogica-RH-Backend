@@ -142,4 +142,23 @@ public class CargosSetoresController : MainController
 
     }
     #endregion
+
+    #region Buscar Inner Cargos Setores
+    [HttpGet("inner")]
+    public async Task<IActionResult> BuscarInnerCargosSetoresAsync()
+    {
+        try
+        {
+
+            var resultado = await _service.ListarInnerCargosSetoresAsync();
+            return CustomResponse(resultado);
+        }
+        catch (Exception ex)
+        {
+
+            NotificarErro(ex.Message);
+            return CustomResponse();
+        }
+    }
+    #endregion
 }

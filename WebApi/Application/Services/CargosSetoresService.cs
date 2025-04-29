@@ -185,4 +185,21 @@ public class CargosSetoresService : ICargosSetoresService
         }
     }
     #endregion
+
+    #region Listar Inner Join CargosSetores
+    public async Task<List<InnerCargoSetor>> ListarInnerCargosSetoresAsync()
+    {
+        try
+        {
+            var listarInnerCargosSetores = await _cargosSetoresRepository.ListarInnerCargoSetores();
+
+            return listarInnerCargosSetores;
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+    #endregion
 }
