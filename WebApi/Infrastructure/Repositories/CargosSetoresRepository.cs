@@ -42,7 +42,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
     #endregion
 
     #region Atualizar CargosSetores
-    //Voltar mais tarde 
+    
     public async Task<bool> AtualizarCargosSetoresAsync(CargosSetores cargosSetoresNovo, CargosSetores cargosSetoresAntigo)
     {
         try
