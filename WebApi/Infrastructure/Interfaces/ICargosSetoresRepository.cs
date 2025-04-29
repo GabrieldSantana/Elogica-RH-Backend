@@ -11,8 +11,5 @@ public interface ICargosSetoresRepository
     Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores );
     Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int pagina, int quantidade);
     Task<bool> VerificarCargosSetores(CargosSetores cargosSetores);
-
-
-
-    
+    Task<List<InnerCargoSetor>> ListarInnerCargoSetores();
 }
