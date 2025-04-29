@@ -97,7 +97,7 @@ public class FuncionarioRepository : IFuncionarioRepository
     {
         try
         {
-            var sql = $"SELECT * FROM Funcionarios WHERE CPF={CPF}";
+            var sql = $"SELECT * FROM Funcionarios WHERE CPF='{CPF}'";
 
             var funcionarios = await _connection.QueryAsync<Funcionario>(sql);
 
