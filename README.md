@@ -198,6 +198,9 @@ Os commits seguem a especificação **Conventional Commits**:
 - Exemplo: `feat: adicionar método paginação de funcionários`
 - Tipos: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 
+## Onde encontrar o Front-end do projeto
+- O repositório que contém a Front-end utilizado neste mesmo projeto pode ser acessado [aqui](https://github.com/mclaraoliveira/Elogica-RH-Frontend).
+
 ## Colaboradores
 Agradecemos aos seguintes colaboradores pelo seu empenho e trabalho neste projeto:
 - [Clara Oliveira](https://github.com/mclaraoliveira).
