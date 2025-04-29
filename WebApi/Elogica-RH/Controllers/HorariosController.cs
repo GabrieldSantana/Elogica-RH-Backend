@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
 using Domain.Dtos;
-using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elogica_RH.Controllers

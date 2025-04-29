@@ -1,5 +1,4 @@
 using System.Data;
-using System.Data.Common;
 using Dapper;
 using Domain.Models;
 using Infrastructure.Interfaces;
