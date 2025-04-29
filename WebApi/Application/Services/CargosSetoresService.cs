@@ -41,6 +41,14 @@ public class CargosSetoresService : ICargosSetoresService
             await _setorService.BuscarSetorPorIdAsync(cargosSetores.SetoresId);
 
             await _cargosServices.BuscarCargosPorIdAsync(cargosSetores.CargosId);
+           
+
+            var existeRelacionamento = await _cargosSetoresRepository.VerificarCargosSetores(cargosSetores);
+            if (existeRelacionamento)
+            {
+                throw new Exception($"O relacionamento entre Cargo ID {cargosSetores.CargosId} e Setor ID {cargosSetores.SetoresId} já existe na tabela CargosSetores.");
+            }
+
             var adicionarCargosSetores = await _cargosSetoresRepository.AdicionarCargosSetoresAsync(cargosSetores);
 
             return adicionarCargosSetores;
@@ -116,7 +124,7 @@ public class CargosSetoresService : ICargosSetoresService
 
     #region Buscar CargosSetores por pagina
 
-    public async Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int quantidade, int pagina)
+    public async Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int pagina, int quantidade)
     {
         try
         {
@@ -129,7 +137,7 @@ public class CargosSetoresService : ICargosSetoresService
                 throw new ArgumentException("A quantidade de paginas deve ser positiva e maior que zero!");
             }
          
-            var cargosSetoresRetornoPaginado = await _cargosSetoresRepository.BuscarCargosSetoresPaginadoAsync(quantidade, pagina);
+            var cargosSetoresRetornoPaginado = await _cargosSetoresRepository.BuscarCargosSetoresPaginadoAsync(pagina, quantidade);
             return cargosSetoresRetornoPaginado;
         }
         catch (Exception)
@@ -141,21 +149,34 @@ public class CargosSetoresService : ICargosSetoresService
     #endregion
 
     #region Excluir cargosSetores
-    public async Task<bool> ExcluirCargosSetoresAsync(int cargosId)
+    public async Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores)
     {
         try
         {
-           if(cargosId <= 0)
+
+            if(cargosSetores.CargosId <=0 || cargosSetores.SetoresId <= 0)
             {
-                throw new ArgumentException("O Id fornecido deve ser positivo e maior que zero");
+                throw new Exception("Os Id fornecido devem ser positivos e maior que zero");
             }
 
-            await _cargosServices.BuscarCargosPorIdAsync(cargosId);
+            await _cargosServices.BuscarCargosPorIdAsync(cargosSetores.CargosId);
+
+            await _setorService.BuscarSetorPorIdAsync(cargosSetores.SetoresId);
+
+            var existeRelacionamento = await _cargosSetoresRepository.VerificarCargosSetores(cargosSetores);
+            if (!existeRelacionamento)
+            {
+                throw new Exception($"O relacionamento entre Cargo ID {cargosSetores.CargosId} e Setor ID {cargosSetores.SetoresId} não existe na tabela CargosSetores.");
+            }
+
+            var resultado = await _cargosSetoresRepository.ExcluirCargosSetoresAsync(cargosSetores);
+
+            return resultado;
 
 
-            var excluirCargosSetores = await _cargosSetoresRepository.ExcluirCargosSetoresAsync(cargosId);
+           
 
-            return excluirCargosSetores;
+           
         }
         catch (Exception)
         {

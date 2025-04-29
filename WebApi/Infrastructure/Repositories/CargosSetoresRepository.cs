@@ -36,7 +36,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         catch (Exception ex)
         {
 
-            throw new Exception("erro ao adicionar CargosSetores");
+            throw new Exception("Erro ao adicionar CargosSetores!");
         }
     }
     #endregion
@@ -66,7 +66,7 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         catch (Exception)
         {
 
-            throw new ArgumentException("Erro ao atualizar CargosSetores");
+            throw new ArgumentException("Erro ao atualizar CargosSetores!");
         }
     }
     #endregion
@@ -84,13 +84,13 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         catch (Exception)
         {
 
-            throw new Exception("Erro ao buscar CargosSetores");
+            throw new Exception("Erro ao buscar CargosSetores!");
         }
     }
     #endregion
 
     #region Buscar CargosSetores paginados
-    public async Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int quantidade, int pagina)
+    public async Task<RetornoPaginado<CargosSetores>> BuscarCargosSetoresPaginadoAsync(int pagina, int quantidade)
     {
         try
         {
@@ -118,52 +118,63 @@ public class CargosSetoresRepository : ICargosSetoresRepository
         }
         catch (Exception ex)
         {
-            throw new Exception("Erro ao realizar busca paginada de CargosSetores");
+            throw new Exception("Erro ao realizar busca paginada de CargosSetores!");
         }
     }
 
     #endregion
 
     #region Excluir CargosSetores 
-    public async Task<bool> ExcluirCargosSetoresAsync(int id)
+    public async Task<bool> ExcluirCargosSetoresAsync(CargosSetores cargosSetores)
     {
         try
         {
-            var sqlDelete = string.Format("delete from CargosSetores where CargosId ={0} ", id);
+            var sqlDelete = @"delete from CargosSetores where CargosId = @CARGOSID and SETORESID = @SETORESID ";
+
+            var parametros = new
+            {
+                CARGOSID = cargosSetores.CargosId,
+                SETORESID = cargosSetores.SetoresId
+            };
 
 
 
-
-            var retorno = await _conn.ExecuteAsync(sqlDelete);
+            var retorno = await _conn.ExecuteAsync(sqlDelete, parametros);
 
             return retorno > 0;
         }
         catch (Exception)
         {
 
-            throw new Exception("Erro ao deleter cargosSetores");
+            throw new Exception("Erro ao excluir cargossetores!");
         }
     }
-    #endregion
-
-    #region Verificar Cargos Setores async
-    public async Task<bool> VerificarCargosSetoresAsync(int id)
+    #region Verificar Cargos Setores
+    public async Task<bool> VerificarCargosSetores(CargosSetores cargosSetores)
     {
         try
         {
-            var sqlVerificar = @"SELECT count(1) FROM CARGOSSETORES WHERE CARGOSID = @CARGOSID";
+            var sql = @"SELECT COUNT(1) FROM CargosSetores 
+                     WHERE CargosId = @CargosId AND SetoresId = @SetoresId";
 
-            var verificacao = await _conn.QuerySingleAsync<int>(sqlVerificar, new { CARGOSID = id });
+            var paramentros = new
+            {
+                 cargosSetores.CargosId,
+                 cargosSetores.SetoresId
+            };
 
-            return verificacao > 0;
-
+            var retorno = await _conn.QuerySingleAsync<int>(sql, paramentros);
+            return retorno > 0;
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
 
-            throw new Exception("Erro ao verifcar ID CargosSetores");
+            throw new Exception("Erro ao verificar cargosSetores!");
         }
     }
     #endregion
+    #endregion
+
+
 }

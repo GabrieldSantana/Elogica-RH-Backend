@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
 using Domain.Dtos;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elogica_RH.Controllers
@@ -19,6 +20,7 @@ namespace Elogica_RH.Controllers
             _mapper = mapper;
         }
 
+        #region Adicionar Horário
         [HttpPost()]
         public async Task<IActionResult> AdicionarHorario([FromBody] HorariosDto dto)
         {
@@ -33,7 +35,8 @@ namespace Elogica_RH.Controllers
                 return CustomResponse();
             }
         }
-
+        #endregion
+        #region Atualizar Horário
         [HttpPut("{id}")]
         public async Task<IActionResult> AtualizarHorario(int id, [FromBody] HorariosDto dto)
         {
@@ -48,7 +51,8 @@ namespace Elogica_RH.Controllers
                 return CustomResponse();
             }
         }
-
+        #endregion
+        #region Excluir Horário
         [HttpDelete("{id}")]
         public async Task<IActionResult> ExcluirHorario(int id)
         {
@@ -63,7 +67,8 @@ namespace Elogica_RH.Controllers
                 return CustomResponse();
             }
         }
-
+        #endregion
+        #region Buscar por Id
         [HttpGet("{id}")]
         public async Task<ActionResult> BuscarPorId(int id)
         {
@@ -78,7 +83,8 @@ namespace Elogica_RH.Controllers
                 return CustomResponse();
             }
         }
-
+        #endregion
+        #region Buscar Horários
         [HttpGet()]
         public async Task<ActionResult> BuscarHorarios()
         {
@@ -93,7 +99,8 @@ namespace Elogica_RH.Controllers
                 return CustomResponse();
             }
         }
-
+        #endregion
+        #region Buscar Paginado
         [HttpGet("{pagina}/{quantidade}")]
         public async Task<ActionResult> BuscarPaginado(int pagina = 1, int quantidade = 10)
         {
@@ -108,5 +115,6 @@ namespace Elogica_RH.Controllers
                 return CustomResponse();
             }
         }
+        #endregion
     }
 }

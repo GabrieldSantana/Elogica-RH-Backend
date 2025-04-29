@@ -6,7 +6,7 @@ using Infrastructure.Interfaces;
 
 namespace Infrastructure.Repositories;
 
-public class MenuRepository: IMenuRepository
+public class MenuRepository : IMenuRepository
 {
     private readonly IDbConnection _connection;
 
@@ -21,7 +21,7 @@ public class MenuRepository: IMenuRepository
         {
             string sql = "SELECT * FROM MENU";
             var menus = await _connection.QueryAsync<Menu>(sql);
-            return [..menus];
+            return [.. menus];
         }
         catch (Exception e)
         {
@@ -55,7 +55,7 @@ public class MenuRepository: IMenuRepository
                 QUANTIDADE = quantidade
             };
 
-            var result =  await _connection.QueryAsync<Menu>(sql, parameters);
+            var result = await _connection.QueryAsync<Menu>(sql, parameters);
 
             return result.ToList();
         }
@@ -95,7 +95,7 @@ public class MenuRepository: IMenuRepository
                 Ordem = menu.Ordem,
                 MenuPaiId = menu.MenuPaiId == 0 ? null : (int?)menu.MenuPaiId
             };
-            
+
             var result = await _connection.ExecuteAsync(sql, parametros);
             return result > 0;
         }
@@ -120,7 +120,7 @@ public class MenuRepository: IMenuRepository
                 Ordem = menu.Ordem,
                 MenuPaiId = menu.MenuPaiId == 0 ? null : (int?)menu.MenuPaiId
             };
-            
+
             var result = await _connection.ExecuteAsync(sql, parametros);
             return result > 0;
         }
@@ -136,7 +136,7 @@ public class MenuRepository: IMenuRepository
         {
             string sql = @"DELETE  FROM Menu WHERE Id = @Id";
 
-            var parametros = new 
+            var parametros = new
             {
                 ID = id
             };

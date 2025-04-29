@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Dapper;
+using Domain.Dtos;
 using Domain.Models;
 using Infrastructure.Interfaces;
 
@@ -16,106 +17,78 @@ namespace Infrastructure.Repositories
         }
         public async Task<RetornoPaginado<Ferias>> BuscarFeriasPaginadoAsync(int pagina, int quantidade)
         {
-            var offset = (pagina - 1) * quantidade;
+            try
+            {
+                var offset = (pagina - 1) * quantidade;
 
-            var sql = @"
+                var sql = @"
             SELECT 
                 f.Id, f.DataInicio, f.DataFim, f.FuncionarioId
             FROM Ferias f
             ORDER BY f.Id
             OFFSET @Offset ROWS FETCH NEXT @Quantidade ROWS ONLY";
 
-            var paramentros = new
+                var paramentros = new
+                {
+                    Offset = pagina,
+                    Quantidade = quantidade
+                };
+                var totalQuery = "SELECT COUNT(*) FROM Ferias";
+
+                var registros = await _connection.QueryAsync<Ferias>(sql, paramentros);
+
+                var totalRegistro = await _connection.ExecuteScalarAsync<int>(totalQuery);
+
+                return new RetornoPaginado<Ferias>
+                {
+                    TotalRegistro = totalRegistro,
+                    Registros = registros.ToList()
+                };
+            }
+            catch (Exception)
             {
-                Offset = pagina,
-                Quantidade = quantidade
-            };
-            var totalQuery = "SELECT COUNT(*) FROM Ferias";
-
-            var registros = await _connection.QueryAsync<Ferias>(sql, paramentros);
-
-            var totalRegistro = await _connection.ExecuteScalarAsync<int>(totalQuery);
-
-            return new RetornoPaginado<Ferias>
-            {
-                TotalRegistro = totalRegistro,
-                Registros = registros.ToList()
-            };
+                throw;
+            }
         }
         public async Task<IEnumerable<Ferias>> BuscarFeriasAsync()
         {
-            var sql = "SELECT * FROM Ferias";
-            return await _connection.QueryAsync<Ferias>(sql);
+            try
+            {
+                var sql = "SELECT * FROM Ferias";
+                return await _connection.QueryAsync<Ferias>(sql);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
         public async Task<Ferias> BuscarFeriasPorIdAsync(int id)
         {
-            var sql = @"
+            try
+            {
+                var sql = @"
             SELECT 
                 f.Id, f.DataInicio, f.DataFim, f.FuncionarioId
             FROM Ferias f
             WHERE f.Id = @Id";
 
-            var retorno = await _connection.QueryFirstOrDefaultAsync<Ferias>(sql, new { Id = id });
-            return retorno;
-        }
-        public async Task<Ferias> AdicionarFeriasAsync(Ferias ferias)
-        {
-            using (var transaction = _connection.BeginTransaction())
+                var retorno = await _connection.QueryFirstOrDefaultAsync<Ferias>(sql, new { Id = id });
+                return retorno;
+            }
+            catch (Exception)
             {
-                try
-                {
-                    //Verifica se o funcionário existe
-                    var funcionarioExists = await _connection.ExecuteScalarAsync<bool>(
-                        "SELECT 1 FROM Funcionarios WHERE Id = @Id AND Ativo = 1",
-                        new { Id = ferias.FuncionarioId },
-                        transaction
-                    );
-
-                    if (!funcionarioExists)
-                        throw new Exception("Funcionário não encontrado ou inativo");
-
-                    //Valida período mínimo de 1 ano de contratação
-                    var dataContratacao = await _connection.ExecuteScalarAsync<DateTime>(
-                        "SELECT DataContratacao FROM Funcionarios WHERE Id = @Id",
-                        new { Id = ferias.FuncionarioId },
-                        transaction
-                    );
-
-                    if (dataContratacao.AddYears(1) > DateTime.Now)
-                        throw new Exception("Funcionário precisa ter pelo menos 1 ano de empresa");
-
-                    //Insere as férias
-                    var query = @"
-                    INSERT INTO Ferias (DataInicio, DataFim, FuncionarioId)
-                    OUTPUT INSERTED.Id
-                    VALUES (@DataInicio, @DataFim, @FuncionarioId)";
-
-                    var id = await _connection.ExecuteScalarAsync<int>(query, new
-                    {
-                        DataInicio = ferias.DataInicio,
-                        DataFim = ferias.DataFim,
-                        FuncionarioId = ferias.FuncionarioId
-                    }, transaction);
-
-                    transaction.Commit();
-                    ferias.Id = id;
-                    return ferias;
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
+                throw;
             }
         }
 
+   
+
         public async Task AtualizarFeriasAsync(Ferias ferias)
         {
-            using (var transaction = _connection.BeginTransaction())
+            try
             {
-                try
-                {
-                    var query = @"
+                var query = @"
             UPDATE Ferias 
             SET 
                 DataInicio = @DataInicio, 
@@ -123,75 +96,55 @@ namespace Infrastructure.Repositories
                 FuncionarioId = @FuncionarioId
             WHERE Id = @Id";
 
-                    await _connection.ExecuteAsync(query, new
-                    {
-                        Id = ferias.Id,
-                        DataInicio = ferias.DataInicio,
-                        DataFim = ferias.DataFim,
-                        FuncionarioId = ferias.FuncionarioId
-                    }, transaction);
-
-                    transaction.Commit();
-                }
-                catch
+                await _connection.ExecuteAsync(query, new
                 {
-                    transaction.Rollback();
-                    throw;
-                }
+                    Id = ferias.Id,
+                    DataInicio = ferias.DataInicio,
+                    DataFim = ferias.DataFim,
+                    FuncionarioId = ferias.FuncionarioId
+                });
             }
+            catch
+            {
+                throw;
+            }
+
         }
         public async Task ExcluirFeriasAsync(int id)
         {
-            await _connection.ExecuteAsync(
-                "DELETE FROM Ferias WHERE Id = @Id",
-                new { Id = id });
+            try
+            {
+                await _connection.ExecuteAsync(
+                    "DELETE FROM Ferias WHERE Id = @Id",
+                    new { Id = id });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public async Task<bool> FuncionarioTemFerias(int funcionarioId, DateTime dataInicio, DateTime dataFim)
+        public async Task<bool> AdicionarFeriasAsync(FeriasDto ferias)
         {
-            var query = @"
-            SELECT COUNT(*) 
-            FROM Ferias 
-            WHERE FuncionarioId = @FuncionarioId
-            AND (
-                (@DataInicio BETWEEN DataInicio AND DataFim) OR
-                (@DataFim BETWEEN DataInicio AND DataFim) OR
-                (DataInicio BETWEEN @DataInicio AND @DataFim)
-            )";
-
-            var count = await _connection.ExecuteScalarAsync<int>(query, new
+            try
             {
-                FuncionarioId = funcionarioId,
-                DataInicio = dataInicio,
-                DataFim = dataFim
-            });
+                //Insere as férias
+                var query = @"
+                    INSERT INTO Ferias (DataInicio, DataFim, FuncionarioId)
+                    VALUES (@DataInicio, @DataFim, @FuncionarioId)";
 
-            return count > 0;
-        }
-
-
-        public async Task<bool> FuncionarioTemFerias(int funcionarioId, DateTime dataInicio, DateTime dataFim, int? excludeFeriasId = null)
-        {
-            var query = @"
-            SELECT COUNT(*) 
-            FROM Ferias 
-            WHERE FuncionarioId = @FuncionarioId
-            AND Id != COALESCE(@ExcludeFeriasId, -1)
-            AND (
-             (@DataInicio BETWEEN DataInicio AND DataFim) OR
-             (@DataFim BETWEEN DataInicio AND DataFim) OR
-             (DataInicio BETWEEN @DataInicio AND @DataFim)
-             )";
-
-            var count = await _connection.ExecuteScalarAsync<int>(query, new
+                var feriasFuncionario = await _connection.ExecuteAsync(query, new
+                {
+                    DataInicio = ferias.DataInicio,
+                    DataFim = ferias.DataFim,
+                    FuncionarioId = ferias.FuncionarioId
+                });
+                return feriasFuncionario > 0 ? true : false;
+            }
+            catch
             {
-                FuncionarioId = funcionarioId,
-                DataInicio = dataInicio,
-                DataFim = dataFim,
-                ExcludeFeriasId = excludeFeriasId
-            });
-
-            return count > 0;
+                throw;
+            }
         }
     }
 }

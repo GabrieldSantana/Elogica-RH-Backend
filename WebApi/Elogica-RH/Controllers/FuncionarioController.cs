@@ -12,6 +12,8 @@ public class FuncionarioController : MainController
 {
     private readonly IFuncionarioService _service;
 
+    public IFuncionarioService Service => _service;
+
     public FuncionarioController(INotificador notificador, IFuncionarioService service) : base(notificador)
     {
         _service = service;
@@ -22,7 +24,7 @@ public class FuncionarioController : MainController
     {
         try
         {
-            var retorno = await _service.BuscarFuncionariosPaginadoAsync(pagina, quantidade);
+            var retorno = await Service.BuscarFuncionariosPaginadoAsync(pagina, quantidade);
             return CustomResponse(retorno);
         }
         catch (Exception e)
@@ -37,7 +39,7 @@ public class FuncionarioController : MainController
     {
         try
         {
-            var retorno = await _service.BuscarFuncionariosAsync();
+            var retorno = await Service.BuscarFuncionariosAsync();
             return CustomResponse(retorno);
         }
         catch (Exception e)
@@ -52,7 +54,7 @@ public class FuncionarioController : MainController
     {
         try
         {
-            var retorno = await _service.BuscarFuncionarioPorIdAsync(id);
+            var retorno = await Service.BuscarFuncionarioPorIdAsync(id);
             return CustomResponse(retorno);
         }
         catch (Exception e)
@@ -67,7 +69,7 @@ public class FuncionarioController : MainController
     {
         try
         {
-            var retorno = await _service.AdicionarFuncionarioAsync(funcionarioDto);
+            var retorno = await Service.AdicionarFuncionarioAsync(funcionarioDto);
             return CustomResponse(retorno);
         }
         catch (Exception e)
@@ -82,7 +84,7 @@ public class FuncionarioController : MainController
     {
         try
         {
-            var retorno = await _service.AtualizarFuncionarioAsync(id, funcionarioDto);
+            var retorno = await Service.AtualizarFuncionarioAsync(id, funcionarioDto);
             return CustomResponse(retorno);
         }
         catch (Exception e)
@@ -97,7 +99,7 @@ public class FuncionarioController : MainController
     {
         try
         {
-            var retorno = await _service.DesativarFuncionarioAsync(id);
+            var retorno = await Service.DesativarFuncionarioAsync(id);
             return CustomResponse(retorno);
         }
         catch (Exception e)
